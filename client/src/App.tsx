@@ -1,25 +1,27 @@
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  useAuth,
-  UserButton,
-} from "@clerk/clerk-react";
+import { Route, Routes } from "react-router";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
 
 function App() {
-  const { userId } = useAuth();
-  if (userId) console.log(userId);
   return (
-    <>
-      <header>
-        <SignedOut>
-          <SignInButton />
-        </SignedOut>
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
-      </header>
-    </>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="login" element={<Login />} />
+      <Route
+        path="bookmarks"
+        element={
+          <>
+            <SignedIn>
+              <h1>Bookmarks</h1>
+            </SignedIn>
+            <SignedOut>
+              <RedirectToSignIn />
+            </SignedOut>
+          </>
+        }
+      />
+    </Routes>
   );
 }
 
