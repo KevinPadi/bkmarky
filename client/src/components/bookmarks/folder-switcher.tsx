@@ -1,4 +1,4 @@
-import { Check, ChevronsUpDown, Loader } from "lucide-react";
+import { Check, Loader } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Command,
@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/popover";
 import { useFolders } from "@/hooks/useFolders";
 import { useState } from "react";
-import { Button } from "../ui/button";
+import { FolderSwitcherTrigger } from "./folder-switcher-trigger";
 
 const FolderSwitcher = () => {
   const [open, setOpen] = useState(false);
@@ -28,14 +28,7 @@ const FolderSwitcher = () => {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          className="w-[200px] justify-between"
-        >
-          Select Folder
-          <ChevronsUpDown className="opacity-50" />
-        </Button>
+        <FolderSwitcherTrigger />
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
