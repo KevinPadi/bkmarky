@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { ChevronsUpDown } from "lucide-react";
 
 const FolderSwitcherError = () => {

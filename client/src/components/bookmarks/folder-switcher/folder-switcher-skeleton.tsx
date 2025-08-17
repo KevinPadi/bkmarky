@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { ChevronsUpDown } from "lucide-react";
 
 const FolderSwitcherSkeleton = () => {

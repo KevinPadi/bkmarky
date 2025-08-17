@@ -1,5 +1,5 @@
 import { ChevronsUpDown } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { forwardRef } from "react";
 import { useFolderStore } from "@/stores/global-state";
 

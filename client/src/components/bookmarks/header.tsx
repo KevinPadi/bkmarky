@@ -1,7 +1,7 @@
 import { UserButton } from "@clerk/clerk-react";
 import logo from "../../assets/logo.svg";
 import { shadcn } from "@clerk/themes";
-import FolderSwitcher from "./folder-switcher";
+import FolderSwitcher from "./folder-switcher/folder-switcher";
 import { ModeToggle } from "../ui/mode-toggle";
 
 const Header = () => {
