@@ -32,12 +32,10 @@ router.post(
 // GET: Listar folders
 router.get("/", async (req, res) => {
   try {
-    const folders = await Promise.all([
-      Folder.find({ userId: req.auth().userId }).sort({ createdAt: -1 }),
-      Folder.countDocuments({ userId: req.auth().userId }),
-    ]);
-
-    res.json({ folders });
+    const folders = await Folder.find({ userId: req.auth().userId }).sort({
+      createdAt: -1,
+    });
+    res.json(folders);
   } catch (err) {
     res.status(500).json({ error: "Failed to list folders" });
   }

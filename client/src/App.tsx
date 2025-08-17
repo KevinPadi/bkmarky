@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
+import Bookmarks from "./pages/Bookmarks";
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
         element={
           <>
             <SignedIn>
-              <h1>Bookmarks</h1>
+              <Bookmarks />
             </SignedIn>
             <SignedOut>
               <RedirectToSignIn />
