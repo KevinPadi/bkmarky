@@ -1,4 +1,4 @@
-import { Check, Loader } from "lucide-react";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Command,
@@ -18,6 +18,7 @@ import { useState } from "react";
 import { FolderSwitcherTrigger } from "./folder-switcher-trigger";
 import { useFolderStore } from "@/stores/global-state";
 import FolderSwitcherSkeleton from "./folder-switcher-skeleton";
+import FolderSwitcherError from "./folder-switcher-error";
 
 const FolderSwitcher = () => {
   const [open, setOpen] = useState(false);
@@ -26,7 +27,7 @@ const FolderSwitcher = () => {
   const { folders, isLoading, isError } = useFolders();
 
   if (isLoading) return <FolderSwitcherSkeleton />;
-  if (isError) return <div>Error</div>;
+  if (isError) return <FolderSwitcherError />;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -35,7 +36,7 @@ const FolderSwitcher = () => {
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." className="h-9" />
+          <CommandInput placeholder="Search folder..." className="h-9" />
           <CommandList>
             <CommandEmpty>No folders found.</CommandEmpty>
             <CommandGroup>
