@@ -17,6 +17,7 @@ import { useFolders } from "@/hooks/useFolders";
 import { useState } from "react";
 import { FolderSwitcherTrigger } from "./folder-switcher-trigger";
 import { useFolderStore } from "@/stores/global-state";
+import FolderSwitcherSkeleton from "./folder-switcher-skeleton";
 
 const FolderSwitcher = () => {
   const [open, setOpen] = useState(false);
@@ -24,7 +25,7 @@ const FolderSwitcher = () => {
   const setActiveFolder = useFolderStore((s) => s.setActiveFolder);
   const { folders, isLoading, isError } = useFolders();
 
-  if (isLoading) return <Loader className="animate-spin" />;
+  if (isLoading) return <FolderSwitcherSkeleton />;
   if (isError) return <div>Error</div>;
 
   return (
