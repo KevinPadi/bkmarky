@@ -22,7 +22,7 @@ import FolderSwitcherError from "./folder-switcher-error";
 
 const FolderSwitcher = () => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const activeFolder = useFolderStore((s) => s.activeFolder);
   const setActiveFolder = useFolderStore((s) => s.setActiveFolder);
   const { folders, isLoading, isError } = useFolders();
 
@@ -34,7 +34,7 @@ const FolderSwitcher = () => {
       <PopoverTrigger asChild>
         <FolderSwitcherTrigger />
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-[200px] p-0" align="start">
         <Command>
           <CommandInput placeholder="Search folder..." className="h-9" />
           <CommandList>
@@ -42,10 +42,11 @@ const FolderSwitcher = () => {
             <CommandGroup>
               {folders?.map((folder) => (
                 <CommandItem
+                  className="group"
                   key={folder._id}
                   value={folder._id}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                    if (currentValue === activeFolder?._id) return;
                     setActiveFolder(folder);
                     setOpen(false);
                   }}
@@ -56,11 +57,22 @@ const FolderSwitcher = () => {
                     src={`https://avatar.vercel.sh/${folder._id}`}
                     alt="folder avatar"
                   />
-                  {folder.name}
+                  <span
+                    className={cn(
+                      "group-hover:opacity-80",
+                      activeFolder?._id === folder._id
+                        ? "opacity-100"
+                        : "opacity-60"
+                    )}
+                  >
+                    {folder.name}
+                  </span>
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === folder._id ? "opacity-100" : "opacity-0"
+                      activeFolder?._id === folder._id
+                        ? "opacity-100"
+                        : "opacity-0"
                     )}
                   />
                 </CommandItem>

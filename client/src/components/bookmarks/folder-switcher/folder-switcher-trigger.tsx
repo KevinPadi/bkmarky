@@ -19,7 +19,7 @@ export const FolderSwitcherTrigger = forwardRef<HTMLButtonElement>(
           src={`https://avatar.vercel.sh/${activeFolder?._id}`}
           alt="folder avatar"
         />
-        {activeFolder?.name}
+        <span className="hidden sm:block">{activeFolder?.name}</span>
         <ChevronsUpDown className="opacity-50" />
       </Button>
     );
