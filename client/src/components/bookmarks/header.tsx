@@ -2,6 +2,7 @@ import { UserButton } from "@clerk/clerk-react";
 import logo from "../../assets/logo.svg";
 import { shadcn } from "@clerk/themes";
 import FolderSwitcher from "./folder-switcher";
+import { ModeToggle } from "../ui/mode-toggle";
 
 const Header = () => {
   return (
@@ -12,7 +13,10 @@ const Header = () => {
         </div>
         <FolderSwitcher />
       </div>
-      <UserButton showName appearance={{ baseTheme: shadcn }} />
+      <div className="flex gap-2 items-center">
+        <ModeToggle />
+        <UserButton showName appearance={{ baseTheme: shadcn }} />
+      </div>
     </header>
   );
 };
