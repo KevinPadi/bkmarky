@@ -1,29 +1,55 @@
-import { ChevronsUpDown } from "lucide-react";
 import { Button } from "../../ui/button";
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { useFolderStore } from "@/stores/global-state";
+import {
+  ChevronsUpDownIcon,
+  type ChevronsUpDownIconHandle,
+} from "@/components/ui/chevrons-up-down";
+import { TextMorph } from "@/components/ui/text-morph";
 
-export const FolderSwitcherTrigger = forwardRef<HTMLButtonElement>(
-  ({ ...props }, ref) => {
-    const activeFolder = useFolderStore((s) => s.activeFolder);
-    return (
-      <Button
-        ref={ref}
-        variant="outline"
-        role="combobox"
-        className="w-fit"
-        {...props}
-      >
-        <img
-          className="size-6 rounded-xl"
-          src={`https://avatar.vercel.sh/${activeFolder?._id}`}
-          alt="folder avatar"
-        />
-        <span className="hidden sm:block">{activeFolder?.name}</span>
-        <ChevronsUpDown className="opacity-50" />
-      </Button>
-    );
-  }
-);
+type FolderSwitcherTriggerProps = React.ComponentProps<typeof Button> & {
+  isOpen?: boolean;
+};
+
+export const FolderSwitcherTrigger = forwardRef<
+  HTMLButtonElement,
+  FolderSwitcherTriggerProps
+>(({ isOpen, ...props }, ref) => {
+  const activeFolder = useFolderStore((s) => s.activeFolder);
+  const chevronsRef = useRef<ChevronsUpDownIconHandle>(null);
+  const [activeText, setActiveText] = useState("");
+
+  useEffect(() => {
+    if (!chevronsRef.current) return;
+    if (isOpen) {
+      chevronsRef.current.startAnimation();
+    } else {
+      chevronsRef.current.stopAnimation();
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!activeFolder) return;
+    setActiveText(activeFolder?.name);
+  }, [activeFolder]);
+
+  return (
+    <Button
+      ref={ref}
+      variant="ghost"
+      role="combobox"
+      className="w-fit data-[state=open]:bg-accent dark:data-[state=open]:bg-accent/50"
+      {...props}
+    >
+      <img
+        className="size-6 rounded-xl"
+        src={`https://avatar.vercel.sh/${activeFolder?._id}`}
+        alt="folder avatar"
+      />
+      <TextMorph className="hidden sm:block">{activeText}</TextMorph>
+      <ChevronsUpDownIcon ref={chevronsRef} className="opacity-50" />
+    </Button>
+  );
+});
 
 FolderSwitcherTrigger.displayName = "FolderSwitcherTrigger";

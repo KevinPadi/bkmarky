@@ -32,7 +32,7 @@ const FolderSwitcher = () => {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <FolderSwitcherTrigger />
+        <FolderSwitcherTrigger isOpen={open} />
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0" align="start">
         <Command>
