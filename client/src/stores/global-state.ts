@@ -11,6 +11,8 @@ export type Folder = {
 
 interface FolderState {
   folders: Folder[];
+  activeFolder: Folder | null;
+  setActiveFolder: (folder: Folder) => void;
   setFolders: (folders: Folder[]) => void;
   updateFolder: (folder: Folder) => void;
   removeFolder: (_id: string) => void;
@@ -18,7 +20,9 @@ interface FolderState {
 
 export const useFolderStore = create<FolderState>((set) => ({
   folders: [],
+  activeFolder: null,
   setFolders: (folders) => set({ folders }),
+  setActiveFolder: (folder) => set({ activeFolder: folder }),
   updateFolder: (folder) =>
     set((state) => ({
       folders: state.folders.map((f) => (f._id === folder._id ? folder : f)),

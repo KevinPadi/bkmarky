@@ -16,10 +16,12 @@ import {
 import { useFolders } from "@/hooks/useFolders";
 import { useState } from "react";
 import { FolderSwitcherTrigger } from "./folder-switcher-trigger";
+import { useFolderStore } from "@/stores/global-state";
 
 const FolderSwitcher = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
+  const setActiveFolder = useFolderStore((s) => s.setActiveFolder);
   const { folders, isLoading, isError } = useFolders();
 
   if (isLoading) return <Loader className="animate-spin" />;
@@ -42,9 +44,16 @@ const FolderSwitcher = () => {
                   value={folder._id}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
+                    setActiveFolder(folder);
                     setOpen(false);
                   }}
                 >
+                  {" "}
+                  <img
+                    className="size-6 rounded-xl"
+                    src={`https://avatar.vercel.sh/${folder._id}`}
+                    alt="folder avatar"
+                  />
                   {folder.name}
                   <Check
                     className={cn(
