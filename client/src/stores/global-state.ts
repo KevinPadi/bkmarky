@@ -16,6 +16,7 @@ interface FolderState {
   setFolders: (folders: Folder[]) => void;
   updateFolder: (folder: Folder) => void;
   removeFolder: (_id: string) => void;
+  addFolder: (folder: Folder) => void;
 }
 
 export const useFolderStore = create<FolderState>((set) => ({
@@ -30,5 +31,9 @@ export const useFolderStore = create<FolderState>((set) => ({
   removeFolder: (_id) =>
     set((state) => ({
       folders: state.folders.filter((f) => f._id !== _id),
+    })),
+  addFolder: (folder) =>
+    set((state) => ({
+      folders: [...state.folders, folder],
     })),
 }));

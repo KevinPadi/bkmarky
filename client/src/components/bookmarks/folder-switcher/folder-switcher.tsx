@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { Check, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Command,
@@ -19,6 +19,8 @@ import { FolderSwitcherTrigger } from "./folder-switcher-trigger";
 import { useFolderStore } from "@/stores/global-state";
 import FolderSwitcherSkeleton from "./folder-switcher-skeleton";
 import FolderSwitcherError from "./folder-switcher-error";
+import { Separator } from "@/components/ui/separator";
+import { AddFolderDialog } from "./add-folder-dialog";
 
 const FolderSwitcher = () => {
   const [open, setOpen] = useState(false);
@@ -77,6 +79,14 @@ const FolderSwitcher = () => {
                   />
                 </CommandItem>
               ))}
+              <Separator />
+              <CommandItem asChild>
+                <AddFolderDialog />
+              </CommandItem>
+              <CommandItem>
+                <Trash2 />
+                Delete folder
+              </CommandItem>
             </CommandGroup>
           </CommandList>
         </Command>
