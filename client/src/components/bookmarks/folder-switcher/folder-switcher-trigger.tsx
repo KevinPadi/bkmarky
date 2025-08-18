@@ -37,8 +37,9 @@ export const FolderSwitcherTrigger = forwardRef<
     <Button
       ref={ref}
       variant="ghost"
+      size={"lg"}
       role="combobox"
-      className="w-fit data-[state=open]:bg-accent dark:data-[state=open]:bg-accent/50"
+      className="w-fit px-2"
       {...props}
     >
       <img

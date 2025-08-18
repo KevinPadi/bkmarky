@@ -48,10 +48,10 @@ export function TextMorph({
   };
 
   const defaultTransition: Transition = {
-    type: "tween",
-    stiffness: 200,
-    damping: 1,
-    mass: 0.3,
+    type: "spring",
+    stiffness: 300,
+    damping: 20,
+    mass: 0.1,
   };
 
   return (

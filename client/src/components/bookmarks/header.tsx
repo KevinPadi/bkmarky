@@ -8,7 +8,7 @@ const Header = () => {
   return (
     <header className="flex items-center justify-between border p-4">
       <div className="flex items-center gap-2">
-        <div className="hidden sm:block rounded-xl bg-neutral-900 dark:bg-neutral-100 p-1.5">
+        <div className="hidden sm:block rounded-xl bg-neutral-200 dark:bg-neutral-900/40 p-1.5">
           <img className="size-5" src={logo} alt="logo" />
         </div>
         <FolderSwitcher />
