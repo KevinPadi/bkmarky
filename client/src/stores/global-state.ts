@@ -1,5 +1,15 @@
 import { create } from "zustand";
 
+export interface Bookmark {
+  _id: string;
+  title: string;
+  url: string;
+  domain: string;
+  createdAt: string;
+  favicon: string;
+  folderId: string;
+}
+
 export type Folder = {
   _id: string;
   name: string;
@@ -17,6 +27,9 @@ interface FolderState {
   updateFolder: (folder: Folder) => void;
   removeFolder: (_id: string) => void;
   addFolder: (folder: Folder) => void;
+  bookmarks: Bookmark[];
+  setBookmarks: (bookmarks: Bookmark[]) => void;
+  addBookmark: (bookmark: Bookmark) => void;
 }
 
 export const useFolderStore = create<FolderState>((set) => ({
@@ -35,5 +48,12 @@ export const useFolderStore = create<FolderState>((set) => ({
   addFolder: (folder) =>
     set((state) => ({
       folders: [...state.folders, folder],
+    })),
+
+  bookmarks: [],
+  setBookmarks: (bookmarks) => set({ bookmarks }),
+  addBookmark: (bookmark) =>
+    set((state) => ({
+      bookmarks: [bookmark, ...state.bookmarks],
     })),
 }));
