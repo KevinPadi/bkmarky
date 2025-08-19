@@ -1,4 +1,4 @@
-// import { useFolderStore } from "@/stores/global-state";
+import { useFolderStore } from "@/stores/global-state";
 import axios, { isAxiosError } from "axios";
 import { toast } from "sonner";
 import type { Bookmark } from "@/stores/global-state";
@@ -12,18 +12,17 @@ export const addBookmark = async ({
   domain,
   favicon,
 }: Omit<Bookmark, "_id" | "createdAt">) => {
-  // const addBookmark = useFolderStore.getState().addBookmark;
+  const addBookmark = useFolderStore.getState().addBookmark;
   try {
     const { data } = await axios.post(
       `${BACKEND_URL}/api/bookmarks`,
       { title, url, folderId, domain, favicon },
       { withCredentials: true }
     );
-    console.log(data);
+    addBookmark(data);
     return data;
   } catch (error: unknown) {
     let errMsg = "Error adding bookmark";
-    console.log(error);
     if (isAxiosError(error)) {
       errMsg = error.response?.data?.error || error.message || errMsg;
     } else if (error instanceof Error) {

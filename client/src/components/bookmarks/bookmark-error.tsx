@@ -1,21 +1,20 @@
 import { toast } from "sonner";
-import { Button } from "../../ui/button";
 import { ChevronsUpDown } from "lucide-react";
+import { Button } from "../ui/button";
 
-const FolderSwitcherError = () => {
-  toast.success("Error fetching folders");
+const BookmarksError = () => {
+  toast.error("Error fetching bookmarks");
   return (
     <Button
       variant={"outline"}
-      size={"lg"}
       disabled
       className="flex gap-2 items-center text-muted-foreground"
     >
       <div className="size-6 rounded-full bg-muted-foreground/30" />
-      Error fetching folders
+      Error fetching bookmarks
       <ChevronsUpDown className="opacity-50" />
     </Button>
   );
 };
 
-export default FolderSwitcherError;
+export default BookmarksError;

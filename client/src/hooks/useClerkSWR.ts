@@ -1,7 +1,7 @@
 import { useAuth } from "@clerk/clerk-react";
 import useSWR from "swr";
 
-export function useClerkSWR(url: string) {
+export function useClerkSWR(url: string | null) {
   const { getToken } = useAuth();
 
   const fetcher = async (url: string) => {

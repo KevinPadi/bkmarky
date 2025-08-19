@@ -27,7 +27,7 @@ createRoot(document.getElementById("root")!).render(
           position="top-center"
           toastOptions={{
             classNames: {
-              default: "!rounded-3xl !backdrop-blur !bg-muted/50",
+              default: "!rounded-3xl !backdrop-blur !bg-muted/50 !w-fit",
             },
           }}
           icons={{

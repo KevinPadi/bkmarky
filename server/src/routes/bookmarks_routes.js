@@ -64,18 +64,12 @@ router.post(
 // Listar bookmarks con filtros
 router.get(
   "/",
-  query("page").optional().toInt().isInt({ min: 1 }),
-  query("limit").optional().toInt().isInt({ min: 1, max: 100 }),
-  query("folderId").optional().isMongoId(),
+  query("folderId").isMongoId(),
   query("search").optional().isString(),
   query("sortBy").optional().isIn(["createdAt", "title"]),
   query("sortOrder").optional().isIn(["asc", "desc"]),
   async (req, res) => {
     try {
-      const page = Number(req.query.page) || 1;
-      const limit = Number(req.query.limit) || 20;
-      const skip = (page - 1) * limit;
-
       const filter = { userId: req.auth().userId };
       if (req.query.folderId) filter.folderId = req.query.folderId;
       if (req.query.search) {
@@ -86,12 +80,9 @@ router.get(
       const sortOrder = (req.query.sortOrder || "desc") === "asc" ? 1 : -1;
       const sort = { [sortField]: sortOrder };
 
-      const [items, total] = await Promise.all([
-        Bookmark.find(filter).sort(sort).skip(skip).limit(limit),
-        Bookmark.countDocuments(filter),
-      ]);
+      const items = await Bookmark.find(filter).sort(sort);
 
-      res.json({ items, page, limit, total });
+      res.json(items);
     } catch (err) {
       res.status(500).json({ error: "Failed to list bookmarks" });
     }
