@@ -10,25 +10,19 @@ const router = express.Router();
 router.post(
   "/",
   body("folderId").isMongoId(),
-  body("title").trim().notEmpty().isLength({ max: 200 }),
+  body("title").trim().notEmpty().isLength({ max: 100 }),
   body("url").trim().notEmpty().isURL({ require_protocol: true }),
   body("favicon").optional().isString().isLength({ max: 5000 }),
+  body("domain").trim().notEmpty().isLength({ max: 200 }),
   async (req, res) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-      const {
-        folderId,
-        title,
-        url,
-        favicon = "",
-        tags = [],
-        isFavorite = false,
-      } = req.body;
+      const { folderId, title, url, favicon, domain = "" } = req.body;
 
       const folder = await Folder.findOne({
         _id: folderId,
-        userId: req.userId,
+        userId: req.auth().userId,
       });
       if (!folder) {
         await session.abortTransaction();
@@ -38,20 +32,19 @@ router.post(
       const created = await Bookmark.create(
         [
           {
-            userId: req.userId,
+            userId: req.auth().userId,
             folderId,
             title,
             url,
             favicon,
-            tags,
-            isFavorite,
+            domain,
           },
         ],
         { session }
       );
 
       await Folder.updateOne(
-        { _id: folderId, userId: req.userId },
+        { _id: folderId, userId: req.auth().userId },
         { $inc: { bookmarksCount: 1 } },
         { session }
       );
@@ -59,6 +52,7 @@ router.post(
       await session.commitTransaction();
       res.status(201).json(created[0]);
     } catch (err) {
+      console.log(err);
       await session.abortTransaction();
       res.status(500).json({ error: "Failed to create bookmark" });
     } finally {
@@ -70,48 +64,25 @@ router.post(
 // Listar bookmarks con filtros
 router.get(
   "/",
-  query("page").optional().toInt().isInt({ min: 1 }),
-  query("limit").optional().toInt().isInt({ min: 1, max: 100 }),
-  query("folderId").optional().isMongoId(),
+  query("folderId").isMongoId(),
   query("search").optional().isString(),
-  query("tags").optional().isString(), // coma-separado
-  query("isFavorite").optional().isBoolean().toBoolean(),
   query("sortBy").optional().isIn(["createdAt", "title"]),
   query("sortOrder").optional().isIn(["asc", "desc"]),
   async (req, res) => {
     try {
-      const page = Number(req.query.page) || 1;
-      const limit = Number(req.query.limit) || 20;
-      const skip = (page - 1) * limit;
-
-      const filter = { userId: req.userId };
+      const filter = { userId: req.auth().userId };
       if (req.query.folderId) filter.folderId = req.query.folderId;
-      if (req.query.isFavorite !== undefined)
-        filter.isFavorite =
-          req.query.isFavorite === "true" || req.query.isFavorite === true;
-
       if (req.query.search) {
         filter.$text = { $search: String(req.query.search) };
-      }
-
-      if (req.query.tags) {
-        const arr = String(req.query.tags)
-          .split(",")
-          .map((t) => t.trim())
-          .filter(Boolean);
-        if (arr.length) filter.tags = { $all: arr };
       }
 
       const sortField = req.query.sortBy || "createdAt";
       const sortOrder = (req.query.sortOrder || "desc") === "asc" ? 1 : -1;
       const sort = { [sortField]: sortOrder };
 
-      const [items, total] = await Promise.all([
-        Bookmark.find(filter).sort(sort).skip(skip).limit(limit),
-        Bookmark.countDocuments(filter),
-      ]);
+      const items = await Bookmark.find(filter).sort(sort);
 
-      res.json({ items, page, limit, total });
+      res.json(items);
     } catch (err) {
       res.status(500).json({ error: "Failed to list bookmarks" });
     }
@@ -126,14 +97,15 @@ router.patch(
   body("url").optional().trim().isURL({ require_protocol: true }),
   body("favicon").optional().isString().isLength({ max: 5000 }),
   body("folderId").optional().isMongoId(),
-  body("tags").optional().isArray(),
-  body("isFavorite").optional().isBoolean(),
   async (req, res) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
       const id = req.params.id;
-      const existing = await Bookmark.findOne({ _id: id, userId: req.userId });
+      const existing = await Bookmark.findOne({
+        _id: id,
+        userId: req.auth().userId,
+      });
       if (!existing) {
         await session.abortTransaction();
         return res.status(404).json({ error: "Bookmark not found" });
@@ -145,7 +117,7 @@ router.patch(
         String(updates.folderId) !== String(existing.folderId);
 
       const updated = await Bookmark.findOneAndUpdate(
-        { _id: id, userId: req.userId },
+        { _id: id, userId: req.auth().userId },
         { $set: updates },
         { new: true, session }
       );
@@ -153,12 +125,12 @@ router.patch(
       if (movingFolder) {
         // Ajustar contadores
         await Folder.updateOne(
-          { _id: existing.folderId, userId: req.userId },
+          { _id: existing.folderId, userId: req.auth().userId },
           { $inc: { bookmarksCount: -1 } },
           { session }
         );
         await Folder.updateOne(
-          { _id: updated.folderId, userId: req.userId },
+          { _id: updated.folderId, userId: req.auth().userId },
           { $inc: { bookmarksCount: 1 } },
           { session }
         );
@@ -181,7 +153,7 @@ router.delete("/:id", param("id").isMongoId(), async (req, res) => {
   session.startTransaction();
   try {
     const doc = await Bookmark.findOneAndDelete(
-      { _id: req.params.id, userId: req.userId },
+      { _id: req.params.id, userId: req.auth().userId },
       { session }
     );
     if (!doc) {
@@ -189,7 +161,7 @@ router.delete("/:id", param("id").isMongoId(), async (req, res) => {
       return res.status(404).json({ error: "Bookmark not found" });
     }
     await Folder.updateOne(
-      { _id: doc.folderId, userId: req.userId },
+      { _id: doc.folderId, userId: req.auth().userId },
       { $inc: { bookmarksCount: -1 } },
       { session }
     );

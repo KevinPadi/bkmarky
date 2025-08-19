@@ -17,6 +17,12 @@ const bookmarkSchema = new mongoose.Schema(
         message: "URL must start with http(s)://",
       },
     },
+    domain: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 200,
+    },
     favicon: {
       type: String,
       trim: true,
@@ -31,15 +37,6 @@ const bookmarkSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Folder",
       required: true,
-      index: true,
-    },
-    tags: {
-      type: [String],
-      default: [],
-    },
-    isFavorite: {
-      type: Boolean,
-      default: false,
       index: true,
     },
   },

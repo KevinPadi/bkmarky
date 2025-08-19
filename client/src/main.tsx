@@ -3,6 +3,9 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import { ClerkProvider } from "@clerk/clerk-react";
+import { BrowserRouter } from "react-router";
+import { shadcn } from "@clerk/themes";
+import { Toaster } from "./components/ui/sonner.tsx";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -11,8 +14,30 @@ if (!PUBLISHABLE_KEY) {
 }
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-      <App />
+    <ClerkProvider
+      appearance={{ baseTheme: shadcn }}
+      publishableKey={PUBLISHABLE_KEY}
+      signInFallbackRedirectUrl={"/bookmarks"}
+      signInUrl="/login"
+    >
+      <BrowserRouter>
+        <App />
+        <Toaster
+          richColors={false}
+          position="top-center"
+          toastOptions={{
+            classNames: {
+              default: "!rounded-3xl !backdrop-blur !bg-muted/50 !w-fit",
+            },
+          }}
+          icons={{
+            error: <div className="size-2.5 rounded-full bg-red-400" />,
+            success: <div className="size-2.5 rounded-full bg-green-400" />,
+            info: <div className="size-2.5 rounded-full bg-blue-400" />,
+            warning: <div className="size-2.5 rounded-full bg-yellow-400" />,
+          }}
+        />
+      </BrowserRouter>
     </ClerkProvider>
   </StrictMode>
 );
