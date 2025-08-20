@@ -47,7 +47,7 @@ const FolderSwitcher = () => {
           <FolderSwitcherTrigger isOpen={open} />
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start">
-          <Command loop>
+          <Command className="bg-transparent" loop>
             <CommandInput placeholder="Search folder..." className="h-9" />
             <CommandList>
               <CommandEmpty>No folders found.</CommandEmpty>
