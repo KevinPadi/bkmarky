@@ -61,11 +61,14 @@ export function AddFolderDialog() {
       <DialogTrigger asChild>
         <Button
           variant="ghost"
-          className="size-full p-2 justify-start font-normal text-sm text-white/60 hover:text-white/80"
+          className="size-full p-2 justify-start font-normal text-sm text-muted-foreground hover:text-accent-foreground"
           onMouseEnter={() => PlusIconRef.current?.startAnimation()}
           onMouseLeave={() => PlusIconRef.current?.stopAnimation()}
         >
-          <PlusIcon className="text-white/60" ref={PlusIconRef} />
+          <PlusIcon
+            className="text-muted-foreground hover:text-accent-foreground"
+            ref={PlusIconRef}
+          />
           Add new folder
         </Button>
       </DialogTrigger>

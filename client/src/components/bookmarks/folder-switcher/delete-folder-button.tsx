@@ -21,7 +21,7 @@ const DeleteFolderButton = () => {
   return (
     <Button
       variant={"ghost"}
-      className="size-full p-2 justify-start font-normal text-sm text-white/60 hover:text-white/80"
+      className="size-full p-2 justify-start font-normal text-sm text-muted-foreground hover:text-accent-foreground"
       onClick={() => handleClick()}
       onMouseEnter={() => DeleteIconRef.current?.startAnimation()}
       onMouseLeave={() => DeleteIconRef.current?.stopAnimation()}
