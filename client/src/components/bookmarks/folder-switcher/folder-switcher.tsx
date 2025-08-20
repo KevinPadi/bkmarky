@@ -91,7 +91,7 @@ const FolderSwitcher = () => {
                 ))}
                 <CommandSeparator className="my-1" />
                 <CommandItem
-                  className="text-accent-foreground/60"
+                  className="text-accent-foreground/60 data-[selected=true]:text-accent-foreground/60"
                   onSelect={() => openFolderModal()}
                   onMouseEnter={() => PlusIconRef.current?.startAnimation()}
                   onMouseLeave={() => PlusIconRef.current?.stopAnimation()}
@@ -101,9 +101,7 @@ const FolderSwitcher = () => {
                   </div>
                   Add new folder
                 </CommandItem>
-                <CommandItem>
-                  <DeleteFolderButton />
-                </CommandItem>
+                <DeleteFolderButton />
               </CommandGroup>
             </CommandList>
           </Command>
