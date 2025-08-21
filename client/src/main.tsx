@@ -23,11 +23,14 @@ createRoot(document.getElementById("root")!).render(
       <BrowserRouter>
         <App />
         <Toaster
+          visibleToasts={1}
+          duration={99999}
           richColors={false}
           position="top-center"
           toastOptions={{
             classNames: {
-              default: "!rounded-3xl !backdrop-blur !bg-muted/50 !w-fit",
+              default: "!rounded-3xl !backdrop-blur !bg-muted/50 !mx-auto ",
+              toast: "!w-fit !left-0 !right-0",
             },
           }}
           icons={{
