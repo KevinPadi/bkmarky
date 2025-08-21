@@ -52,44 +52,45 @@ const FolderSwitcher = () => {
             <CommandList>
               <CommandEmpty>No folders found.</CommandEmpty>
               <CommandGroup>
-                {folders?.map((folder) => (
-                  <CommandItem
-                    className="group"
-                    key={folder._id}
-                    value={folder.name}
-                    onSelect={(currentValue) => {
-                      if (currentValue === activeFolder?.name) return;
-                      setActiveFolder(folder);
-                      setOpen(false);
-                    }}
-                  >
-                    {" "}
-                    <img
-                      className="size-6 rounded-xl"
-                      src={`https://avatar.vercel.sh/${folder._id}`}
-                      alt="folder avatar"
-                    />
-                    <span
-                      className={cn(
-                        "group-hover:opacity-80",
-                        activeFolder?._id === folder._id
-                          ? "opacity-100"
-                          : "opacity-60"
-                      )}
+                {folders.length > 0 &&
+                  folders?.map((folder) => (
+                    <CommandItem
+                      className="group"
+                      key={folder._id}
+                      value={folder.name}
+                      onSelect={(currentValue) => {
+                        if (currentValue === activeFolder?.name) return;
+                        setActiveFolder(folder);
+                        setOpen(false);
+                      }}
                     >
-                      {folder.name}
-                    </span>
-                    <Check
-                      className={cn(
-                        "ml-auto",
-                        activeFolder?._id === folder._id
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
-                  </CommandItem>
-                ))}
-                <CommandSeparator className="my-1" />
+                      {" "}
+                      <img
+                        className="size-6 rounded-xl"
+                        src={`https://avatar.vercel.sh/${folder._id}`}
+                        alt="folder avatar"
+                      />
+                      <span
+                        className={cn(
+                          "group-hover:opacity-80",
+                          activeFolder?._id === folder._id
+                            ? "opacity-100"
+                            : "opacity-60"
+                        )}
+                      >
+                        {folder.name}
+                      </span>
+                      <Check
+                        className={cn(
+                          "ml-auto",
+                          activeFolder?._id === folder._id
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                {folders.length > 0 && <CommandSeparator className="my-1" />}
                 <CommandItem
                   className="text-accent-foreground/60 data-[selected=true]:text-accent-foreground/60"
                   onSelect={() => openFolderModal()}

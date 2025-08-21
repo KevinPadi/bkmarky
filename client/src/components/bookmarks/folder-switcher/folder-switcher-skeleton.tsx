@@ -7,10 +7,10 @@ const FolderSwitcherSkeleton = () => {
     <Button
       variant={"ghost"}
       size={"lg"}
-      className="flex gap-2 items-center px-2 w-fit"
+      className="flex gap-2 items-center justify-between !px-2 w-fit"
     >
-      <Skeleton className="size-6 rounded-full" />
-      <Skeleton className="h-4 w-20" />
+      <Skeleton className="size-7 rounded-full" />
+      <Skeleton className="h-4 w-[68px]" />
       <ChevronsUpDown className="opacity-50" />
     </Button>
   );

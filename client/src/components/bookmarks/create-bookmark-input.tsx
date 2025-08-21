@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { isAxiosError } from "axios";
 import { addBookmark } from "@/api/bookmarks";
 import { useFolderStore } from "@/stores/global-state";
+import { cn } from "@/lib/utils";
 
 const CreateBookmarkInput = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -68,10 +69,14 @@ const CreateBookmarkInput = () => {
         addNewBookmark();
         setNewBookmark("");
       }}
-      className="relative flex items-center rounded-md border focus-within:ring-1 focus-within:ring-ring px-2"
+      className={cn(
+        "relative flex items-center rounded-md border focus-within:ring-1 focus-within:ring-ring px-2",
+        !activeFolder && "opacity-50 pointer-events-none"
+      )}
     >
       <PlusIcon size={26} strokeWidth={1.5} className="text-muted-foreground" />
       <Input
+        disabled={!activeFolder}
         required
         value={newBookmark}
         onChange={(e) => setNewBookmark(e.target.value)}
@@ -80,7 +85,7 @@ const CreateBookmarkInput = () => {
         ref={inputRef}
         placeholder="Type your bookmark here..."
         className="border-0 focus-visible:ring-0 bg-transparent
-         dark:bg-transparent h-12"
+         dark:bg-transparent h-12 disabled:pointer-events-none"
       />
       <kbd className="bg-muted text-muted-foreground pointer-events-none inline-flex h-6 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none">
         <span className="text-xs pt-1">⌘</span>J
