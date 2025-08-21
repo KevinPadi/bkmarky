@@ -7,13 +7,11 @@ const folderSchema = new mongoose.Schema(
       required: true,
       trim: true,
       maxlength: 100,
-      unique: true,
     },
     userId: {
       type: String,
       required: true,
       index: true,
-      unique: true,
     },
     bookmarksCount: {
       type: Number,
@@ -26,6 +24,6 @@ const folderSchema = new mongoose.Schema(
 );
 
 // Nombre único por usuario
-// folderSchema.index({ userId: 1, name: 1 }, { unique: true });
+folderSchema.index({ userId: 1, name: 1 }, { unique: true });
 
 export const Folder = mongoose.model("Folder", folderSchema);
