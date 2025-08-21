@@ -47,8 +47,9 @@ export const deleteFolder = async (folderId: string) => {
       { withCredentials: true }
     );
     toast.success("Folder deleted");
+    setActiveFolder(folders[1]);
     removeFolder(activeFolder?._id);
-    setActiveFolder(folders[0]);
+    console.log(folders[0]);
     return data;
   } catch (error: unknown) {
     let errMsg = "Error al eliminar la carpeta";
