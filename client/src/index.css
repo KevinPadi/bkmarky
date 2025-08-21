@@ -123,3 +123,10 @@
 html {
   scrollbar-gutter: stable;
 }
+
+[cmdk-list] {
+  min-height: fit-content;
+  height: var(--cmdk-list-height);
+  max-height: 500px;
+  transition: height 100ms ease;
+}
