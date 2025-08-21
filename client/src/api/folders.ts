@@ -14,10 +14,15 @@ export const createFolder = async (name: string) => {
     toast.success("Folder added");
     return data;
   } catch (error: unknown) {
-    let errMsg = "Error al crear la carpeta";
+    let errMsg = "Failed to create folder";
 
     if (isAxiosError(error)) {
-      errMsg = error.response?.data?.message || error.message || errMsg;
+      // Buscar el mensaje de error en el orden correcto
+      errMsg =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        error.message ||
+        errMsg;
     } else if (error instanceof Error) {
       errMsg = error.message || errMsg;
     } else if (typeof error === "string") {
@@ -25,6 +30,8 @@ export const createFolder = async (name: string) => {
     }
 
     toast.error(errMsg);
+    // IMPORTANTE: Re-lanzar el error para que onSubmit lo pueda catchear
+    throw new Error(errMsg);
   }
 };
 

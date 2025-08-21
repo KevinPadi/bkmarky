@@ -36,6 +36,7 @@ type FolderSwitcherProps = {
 export function AddFolderDialog({ open, onOpenChange }: FolderSwitcherProps) {
   const [isLoading, setIsLoading] = useState(false);
   const addFolder = useFolderStore((s) => s.addFolder);
+  const setActiveFolder = useFolderStore((s) => s.setActiveFolder);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,6 +50,7 @@ export function AddFolderDialog({ open, onOpenChange }: FolderSwitcherProps) {
     try {
       const newFolder = await createFolder(values.folderName);
       addFolder(newFolder);
+      setActiveFolder(newFolder);
       form.reset();
       onOpenChange(false);
     } catch (error) {

@@ -24,7 +24,6 @@ createRoot(document.getElementById("root")!).render(
         <App />
         <Toaster
           visibleToasts={1}
-          duration={99999}
           richColors={false}
           position="top-center"
           toastOptions={{
