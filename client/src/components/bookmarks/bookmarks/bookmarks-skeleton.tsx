@@ -1,5 +1,5 @@
+import { Skeleton } from "@/components/ui/skeleton";
 import { AnimatePresence, motion } from "motion/react";
-import { Skeleton } from "../ui/skeleton";
 
 const BookmarksSkeleton = () => {
   return (

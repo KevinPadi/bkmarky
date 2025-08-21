@@ -1,4 +1,4 @@
-import BookmarksList from "@/components/bookmarks/bookmarks-list";
+import BookmarksList from "@/components/bookmarks/bookmarks/bookmarks-list";
 import CreateBookmarkInput from "@/components/bookmarks/create-bookmark-input";
 import Header from "@/components/bookmarks/header";
 import { useFolderStore } from "@/stores/global-state";

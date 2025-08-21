@@ -1,10 +1,10 @@
-import BookmarksSkeleton from "@/components/bookmarks/bookmarks-skeleton";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useFolderStore } from "@/stores/global-state";
 import BookmarksError from "./bookmark-error";
 import BookmarkItem from "./bookmark-item";
-import { MotionEffect } from "../animate-ui/effects/motion-effect";
 import { AnimatePresence } from "motion/react";
+import BookmarksSkeleton from "./bookmarks-skeleton";
+import { MotionEffect } from "@/components/animate-ui/effects/motion-effect";
 
 const BookmarksList = () => {
   const { bookmarks, isLoading, isError } = useBookmarks();
