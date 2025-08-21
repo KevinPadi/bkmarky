@@ -4,7 +4,11 @@ import { ChevronsUpDown } from "lucide-react";
 
 const FolderSwitcherSkeleton = () => {
   return (
-    <Button variant={"outline"} className="flex gap-2 items-center">
+    <Button
+      variant={"ghost"}
+      size={"lg"}
+      className="flex gap-2 items-center px-2 w-fit"
+    >
       <Skeleton className="size-6 rounded-full" />
       <Skeleton className="h-4 w-20" />
       <ChevronsUpDown className="opacity-50" />
