@@ -49,7 +49,7 @@ export const useFolderStore = create<FolderState>((set) => ({
     })),
   addFolder: (folder) =>
     set((state) => ({
-      folders: [...state.folders, folder],
+      folders: [folder, ...state.folders],
     })),
 
   bookmarks: [],
