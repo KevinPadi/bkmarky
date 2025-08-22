@@ -4,11 +4,11 @@ import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import morgan from "morgan";
-import foldersRouter from "./routes/folders_routes.js";
-import bookmarksRouter from "./routes/bookmarks_routes.js";
+import foldersRouter from "./src/routes/folders_routes.js";
+import bookmarksRouter from "./src/routes/bookmarks_routes.js";
 import { validationResult } from "express-validator";
 import { clerkMiddleware, getAuth } from "@clerk/express";
-import { connectDB } from "./db.js";
+import { connectDB } from "./src/db.js";
 
 dotenv.config();
 

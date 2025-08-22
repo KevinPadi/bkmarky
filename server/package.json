@@ -1,10 +1,11 @@
 {
   "name": "bookmark-manager-backend",
   "version": "1.0.0",
+  "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "node --watch ./src/server.js",
-    "start": "node ./src/server.js"
+    "dev": "node --watch index.js",
+    "start": "node src/index.js"
   },
   "dependencies": {
     "@clerk/express": "^1.1.0",
