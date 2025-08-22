@@ -30,6 +30,8 @@ interface FolderState {
   bookmarks: Bookmark[];
   setBookmarks: (bookmarks: Bookmark[]) => void;
   addBookmark: (bookmark: Bookmark) => void;
+  updateBookmarkTitle: (bookmarkId: Bookmark) => void;
+  removeBookmark: (bookmarkId: string) => void;
 }
 
 export const useFolderStore = create<FolderState>((set) => ({
@@ -47,7 +49,7 @@ export const useFolderStore = create<FolderState>((set) => ({
     })),
   addFolder: (folder) =>
     set((state) => ({
-      folders: [...state.folders, folder],
+      folders: [folder, ...state.folders],
     })),
 
   bookmarks: [],
@@ -55,5 +57,15 @@ export const useFolderStore = create<FolderState>((set) => ({
   addBookmark: (bookmark) =>
     set((state) => ({
       bookmarks: [bookmark, ...state.bookmarks],
+    })),
+  updateBookmarkTitle: (bookmark) =>
+    set((state) => ({
+      bookmarks: state.bookmarks.map((b) =>
+        b._id === bookmark._id ? bookmark : b
+      ),
+    })),
+  removeBookmark: (bookmarkId: string) =>
+    set((state) => ({
+      bookmarks: state.bookmarks.filter((b) => b._id !== bookmarkId),
     })),
 }));

@@ -7,7 +7,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
@@ -22,19 +21,23 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useFolderStore } from "@/stores/global-state";
-import { PlusIcon, type PlusIconHandle } from "@/components/ui/plus";
 
 const formSchema = z.object({
   folderName: z.string().min(1).max(100),
 });
 
-export function AddFolderDialog() {
+type FolderSwitcherProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+export function AddFolderDialog({ open, onOpenChange }: FolderSwitcherProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [open, setOpen] = useState(false);
   const addFolder = useFolderStore((s) => s.addFolder);
-  const PlusIconRef = useRef<PlusIconHandle>(null);
+  const setActiveFolder = useFolderStore((s) => s.setActiveFolder);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -43,12 +46,13 @@ export function AddFolderDialog() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true); // Activa loader
+    setIsLoading(true);
     try {
       const newFolder = await createFolder(values.folderName);
       addFolder(newFolder);
+      setActiveFolder(newFolder);
       form.reset();
-      setOpen(false);
+      onOpenChange(false);
     } catch (error) {
       console.log(error);
     } finally {
@@ -57,18 +61,7 @@ export function AddFolderDialog() {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          className="size-full p-2 justify-start font-normal text-sm text-white/60 hover:text-white/80"
-          onMouseEnter={() => PlusIconRef.current?.startAnimation()}
-          onMouseLeave={() => PlusIconRef.current?.stopAnimation()}
-        >
-          <PlusIcon className="text-white/60" ref={PlusIconRef} />
-          Add new folder
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add folder</DialogTitle>

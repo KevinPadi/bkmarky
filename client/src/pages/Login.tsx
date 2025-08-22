@@ -6,9 +6,9 @@ const Login = () => {
     <section className="flex flex-col gap-4 items-center justify-center h-screen">
       <Link
         to={"/"}
-        className="size-16 p-2 rounded-2xl bg-neutral-900 dark:bg-neutral-100"
+        className="size-16 p-2 rounded-2xl bg-neutral-200 dark:bg-neutral-900/40 flex items-center justify-center"
       >
-        <img src={logo} alt="logo svg" />
+        <img className="size-12" src={logo} alt="logo svg" />
       </Link>
       <SignIn withSignUp={true} />
     </section>

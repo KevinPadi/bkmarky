@@ -3,7 +3,7 @@ import { Button } from "../../ui/button";
 import { ChevronsUpDown } from "lucide-react";
 
 const FolderSwitcherError = () => {
-  toast.success("Error fetching folders");
+  toast.error("Error fetching folders");
   return (
     <Button
       variant={"outline"}

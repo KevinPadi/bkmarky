@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { ChevronsUpDown } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 
 const BookmarksError = () => {
   toast.error("Error fetching bookmarks");

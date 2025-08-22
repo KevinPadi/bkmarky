@@ -19,7 +19,7 @@ export function useBookmarks() {
 
   return {
     bookmarks: useFolderStore((s) => s.bookmarks),
-    isLoading: !data && !error,
+    isLoading: activeFolder ? !data && !error : false,
     isError: error,
   };
 }
