@@ -3,7 +3,7 @@ import { Eye, EyeClosed, LoaderCircle } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useAuthStore } from "@/stores/auth-store";
-import { authSchema, type AuthSchema } from "@/schemas/auth_schema";
+import { loginSchema, type LoginSchema } from "@/schemas/login_schema";
 
 const SignInForm = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -13,9 +13,9 @@ const SignInForm = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<AuthSchema>({ resolver: zodResolver(authSchema) });
+  } = useForm<LoginSchema>({ resolver: zodResolver(loginSchema) });
 
-  const onSubmit = async (data: AuthSchema) => {
+  const onSubmit = async (data: LoginSchema) => {
     try {
       await login(data);
     } catch (error) {
