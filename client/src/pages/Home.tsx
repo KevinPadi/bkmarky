@@ -1,5 +1,4 @@
 import { RippleButton } from "@/components/animate-ui/buttons/ripple";
-import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import { Link } from "react-router";
 
 const Home = () => {
@@ -10,16 +9,12 @@ const Home = () => {
           Bkmarky: Minimalist bookmark manager
         </h1>
         <div>
-          <SignedIn>
-            <Link to={"/bookmarks"}>
-              <RippleButton>Go to my Bookmarks</RippleButton>
-            </Link>
-          </SignedIn>
-          <SignedOut>
-            <Link to={"/login"}>
-              <RippleButton>Get started</RippleButton>
-            </Link>
-          </SignedOut>
+          <Link to={"/bookmarks"}>
+            <RippleButton>Go to my Bookmarks</RippleButton>
+          </Link>
+          <Link to={"/login"}>
+            <RippleButton>Get started</RippleButton>
+          </Link>
         </div>
       </div>
     </section>

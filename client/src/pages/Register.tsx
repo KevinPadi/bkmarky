@@ -1,7 +1,8 @@
 import { Link } from "react-router";
 import logo from "../assets/logo.svg";
-import SignInForm from "@/components/auth/signin-form";
-const Login = () => {
+import SignUpForm from "@/components/auth/signup-form";
+
+const Register = () => {
   return (
     <section className="flex flex-col gap-4 items-center justify-center h-screen">
       <Link
@@ -10,9 +11,9 @@ const Login = () => {
       >
         <img className="size-12" src={logo} alt="logo svg" />
       </Link>
-      <SignInForm />
+      <SignUpForm />
     </section>
   );
 };
 
-export default Login;
+export default Register;

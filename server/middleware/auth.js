@@ -1,14 +1,15 @@
-import { getAuth } from "@clerk/express";
+import jwt from "jsonwebtoken";
 
-const requireAuth = (req, res, next) => {
-  const { userId } = getAuth(req);
+export const protect = (req, res, next) => {
+  const token = req.cookies.token;
 
-  if (!userId) {
-    return res.status(401).json({ message: "Unauthorized - Please log in" });
+  if (!token) return res.status(401).json({ message: "Not authorize" });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded.id;
+    next();
+  } catch (error) {
+    res.status(401).json({ message: "Invalid token" });
   }
-
-  req.userId = userId;
-  next();
 };
-
-module.exports = { requireAuth };
