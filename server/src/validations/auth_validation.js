@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const registerSchema = z.object({
+  name: z.string().max(100, "Name cannot be longer than 50 characters"),
   email: z
-    .string()
-    .email("Invalid email")
+    .email("Email is required")
     .max(100, "Email cannot be longer than 100 characters"),
   password: z
     .string()

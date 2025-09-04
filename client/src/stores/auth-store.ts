@@ -4,9 +4,12 @@ import { toast } from "sonner";
 
 interface User {
   _id: string;
+  name: string;
+  email: string;
 }
 
 interface AuthData {
+  name?: string;
   email: string;
   password: string;
 }
@@ -33,7 +36,13 @@ export const useAuthStore = create<AuthStore>((set) => {
       const res = await axios.get<User>(`${BACKEND_URL}/api/protected`, {
         withCredentials: true,
       });
-      set({ user: { _id: res.data._id } });
+      set({
+        user: {
+          _id: res.data._id,
+          name: res.data.name,
+          email: res.data.email,
+        },
+      });
     } catch {
       set({ user: null });
     } finally {

@@ -19,11 +19,31 @@ const SignUpForm = () => {
     try {
       await registerUser(data);
     } catch (error) {
-      console.error("Error en el login:", error);
+      console.error("Login error:", error);
     }
   };
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+      {/* Name */}
+      <div>
+        <label
+          htmlFor="name"
+          className="block text-sm font-medium text-neutral-700"
+        >
+          Name
+        </label>
+        <input
+          maxLength={50}
+          type="string"
+          id="name"
+          className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-0 focus:outline-amber-500 focus:border-amber-500 border-neutral-300 transition-colors ease-in-out duration-300"
+          {...register("name")}
+        />
+        {errors.name && (
+          <p className="text-red-500 text-sm">{errors.name.message}</p>
+        )}
+      </div>
+
       {/* Email */}
       <div>
         <label
@@ -33,6 +53,7 @@ const SignUpForm = () => {
           Email
         </label>
         <input
+          maxLength={100}
           type="email"
           id="email"
           className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-0 focus:outline-amber-500 focus:border-amber-500 border-neutral-300 transition-colors ease-in-out duration-300"
@@ -54,6 +75,7 @@ const SignUpForm = () => {
         </label>
         <div className="relative">
           <input
+            minLength={6}
             type={isVisible ? "text" : "password"}
             id="password"
             className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-0 focus:outline-amber-500 focus:border-amber-500 border-neutral-300 transition-colors ease-in-out duration-300"
