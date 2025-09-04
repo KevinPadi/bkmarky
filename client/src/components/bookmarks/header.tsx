@@ -1,6 +1,7 @@
 import logo from "../../assets/logo.svg";
 import FolderSwitcher from "./folder-switcher/folder-switcher";
 import { ModeToggle } from "../ui/mode-toggle";
+import UserDropdown from "../auth/user-dropdown";
 
 const Header = () => {
   return (
@@ -14,6 +15,7 @@ const Header = () => {
       </div>
       <div className="flex gap-2 items-center">
         <ModeToggle />
+        <UserDropdown />
       </div>
     </header>
   );
