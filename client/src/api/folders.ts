@@ -2,7 +2,7 @@ import { useFolderStore } from "@/stores/global-state";
 import axios, { isAxiosError } from "axios";
 import { toast } from "sonner";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = import.meta.env.VITE_API_URL;
 
 export const createFolder = async (name: string) => {
   try {
@@ -49,7 +49,6 @@ export const deleteFolder = async (folderId: string) => {
     toast.success("Folder deleted");
     setActiveFolder(folders[1]);
     removeFolder(activeFolder?._id);
-    console.log(folders[0]);
     return data;
   } catch (error: unknown) {
     let errMsg = "Error al eliminar la carpeta";

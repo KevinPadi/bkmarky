@@ -4,10 +4,9 @@ import { protect } from "../../middleware/auth.js";
 const router = express.Router();
 
 router.get("/protected", protect, (req, res) => {
-  console.log(req);
   res.json({
     message: "Protected route",
-    _id: req.user.id,
+    _id: req.user.userId,
     name: req.user.name,
     email: req.user.email,
   });
