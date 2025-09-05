@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { toast } from "sonner";
 
 interface User {
@@ -57,9 +57,18 @@ export const useAuthStore = create<AuthStore>((set) => {
       });
       await checkAuth();
       // navigate("/board");
-    } catch (error: any) {
-      const message = error?.response?.data?.message || "Error desconocido";
-      toast.error(`Error: ${message}`);
+    } catch (error: unknown) {
+      let errMsg = "Error al eliminar la carpeta";
+
+      if (isAxiosError(error)) {
+        errMsg = error.response?.data?.message || error.message || errMsg;
+      } else if (error instanceof Error) {
+        errMsg = error.message || errMsg;
+      } else if (typeof error === "string") {
+        errMsg = error;
+      }
+
+      toast.error(errMsg);
     }
   };
 
@@ -98,9 +107,18 @@ export const useAuthStore = create<AuthStore>((set) => {
       });
       await checkAuth();
       // navigate("/board");
-    } catch (error: any) {
-      const message = error?.response?.data?.message || "Error desconocido";
-      toast.error(`Error: ${message}`);
+    } catch (error: unknown) {
+      let errMsg = "Error al eliminar la carpeta";
+
+      if (isAxiosError(error)) {
+        errMsg = error.response?.data?.message || error.message || errMsg;
+      } else if (error instanceof Error) {
+        errMsg = error.message || errMsg;
+      } else if (typeof error === "string") {
+        errMsg = error;
+      }
+
+      toast.error(errMsg);
     }
   };
 
@@ -126,10 +144,18 @@ export const useAuthStore = create<AuthStore>((set) => {
       set({ user: null });
       toast.success("Cuenta eliminada exitosamente");
       // navigate("/register");
-    } catch (error: any) {
-      const message =
-        error?.response?.data?.message || "Error al eliminar la cuenta";
-      toast.error(message);
+    } catch (error: unknown) {
+      let errMsg = "Error al eliminar la carpeta";
+
+      if (isAxiosError(error)) {
+        errMsg = error.response?.data?.message || error.message || errMsg;
+      } else if (error instanceof Error) {
+        errMsg = error.message || errMsg;
+      } else if (typeof error === "string") {
+        errMsg = error;
+      }
+
+      toast.error(errMsg);
     }
   };
 
