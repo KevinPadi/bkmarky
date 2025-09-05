@@ -30,6 +30,7 @@ const FolderSwitcher = () => {
   const activeFolder = useFolderStore((s) => s.activeFolder);
   const setActiveFolder = useFolderStore((s) => s.setActiveFolder);
   const { folders, isLoading, isError } = useFolders();
+
   const PlusIconRef = useRef<PlusIconHandle>(null);
 
   if (isLoading) return <FolderSwitcherSkeleton />;

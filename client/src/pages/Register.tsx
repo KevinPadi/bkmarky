@@ -1,12 +1,12 @@
 import { Link } from "react-router";
 import logo from "../assets/logo.svg";
-import SignInForm from "@/components/auth/signin-form";
+import SignUpForm from "@/components/auth/signup-form";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 
-const Login = () => {
+const Register = () => {
   return (
-    <section className="flex flex-col gap-4 items-center justify-center h-screen relative p-4">
+    <section className="flex flex-col gap-4 items-center justify-center h-screen p-4 relative">
       <Link to={"/"}>
         <Button
           variant={"outline"}
@@ -26,19 +26,19 @@ const Login = () => {
         </Link>
 
         <div className="text-center gap-4">
-          <h1 className="text-2xl">Heey, welcome back!</h1>
+          <h1 className="text-2xl">Heey, welcome to bkmarky!</h1>
           <p className="text-muted-foreground text-sm">
-            First time here?{" "}
-            <Link to="/signup" className="text-white">
-              Sign up here
+            Already have an account?{" "}
+            <Link to="/login" className="text-white">
+              Sign in here
             </Link>
           </p>
         </div>
 
-        <SignInForm />
+        <SignUpForm />
       </div>
     </section>
   );
 };
 
-export default Login;
+export default Register;

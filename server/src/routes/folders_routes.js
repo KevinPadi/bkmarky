@@ -18,7 +18,7 @@ router.post(
 
       const folder = await Folder.create({
         name: req.body.name,
-        userId: req.auth().userId,
+        userId: req.user.userId,
       });
       res.status(201).json(folder);
     } catch (err) {
@@ -32,7 +32,7 @@ router.post(
 // GET: Listar folders
 router.get("/", async (req, res) => {
   try {
-    const folders = await Folder.find({ userId: req.auth().userId }).sort({
+    const folders = await Folder.find({ userId: req.user.userId }).sort({
       createdAt: -1,
     });
     res.json(folders);
@@ -49,7 +49,7 @@ router.patch(
   async (req, res) => {
     try {
       const folder = await Folder.findOneAndUpdate(
-        { _id: req.params.id, userId: req.auth().userId },
+        { _id: req.params.id, userId: req.user.userId },
         { $set: { name: req.body.name } },
         { new: true }
       );
@@ -69,7 +69,7 @@ router.delete("/:id", param("id").isMongoId(), async (req, res) => {
   session.startTransaction();
   try {
     const folder = await Folder.findOneAndDelete(
-      { _id: req.params.id, userId: req.auth().userId },
+      { _id: req.params.id, userId: req.user.userId },
       { session }
     );
     if (!folder) {
@@ -77,7 +77,7 @@ router.delete("/:id", param("id").isMongoId(), async (req, res) => {
       return res.status(404).json({ error: "Folder not found" });
     }
     await Bookmark.deleteMany(
-      { folderId: folder._id, userId: req.auth().userId },
+      { folderId: folder._id, userId: req.user.userId },
       { session }
     );
     await session.commitTransaction();

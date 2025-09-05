@@ -3,7 +3,7 @@ import axios, { isAxiosError } from "axios";
 import { toast } from "sonner";
 import type { Bookmark } from "@/stores/global-state";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = import.meta.env.VITE_API_URL;
 
 export const addBookmark = async ({
   title,

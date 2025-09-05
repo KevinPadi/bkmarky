@@ -1,8 +1,7 @@
-import { UserButton } from "@clerk/clerk-react";
 import logo from "../../assets/logo.svg";
-import { shadcn } from "@clerk/themes";
 import FolderSwitcher from "./folder-switcher/folder-switcher";
 import { ModeToggle } from "../ui/mode-toggle";
+import UserDropdown from "../auth/user-dropdown";
 
 const Header = () => {
   return (
@@ -16,7 +15,7 @@ const Header = () => {
       </div>
       <div className="flex gap-2 items-center">
         <ModeToggle />
-        <UserButton showName appearance={{ baseTheme: shadcn }} />
+        <UserDropdown />
       </div>
     </header>
   );

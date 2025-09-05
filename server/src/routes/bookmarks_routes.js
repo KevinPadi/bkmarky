@@ -22,7 +22,7 @@ router.post(
 
       const folder = await Folder.findOne({
         _id: folderId,
-        userId: req.auth().userId,
+        userId: req.user.userId,
       });
       if (!folder) {
         await session.abortTransaction();
@@ -32,7 +32,7 @@ router.post(
       const created = await Bookmark.create(
         [
           {
-            userId: req.auth().userId,
+            userId: req.user.userId,
             folderId,
             title,
             url,
@@ -44,7 +44,7 @@ router.post(
       );
 
       await Folder.updateOne(
-        { _id: folderId, userId: req.auth().userId },
+        { _id: folderId, userId: req.user.userId },
         { $inc: { bookmarksCount: 1 } },
         { session }
       );
@@ -52,7 +52,6 @@ router.post(
       await session.commitTransaction();
       res.status(201).json(created[0]);
     } catch (err) {
-      console.log(err);
       await session.abortTransaction();
       res.status(500).json({ error: "Failed to create bookmark" });
     } finally {
@@ -70,7 +69,7 @@ router.get(
   query("sortOrder").optional().isIn(["asc", "desc"]),
   async (req, res) => {
     try {
-      const filter = { userId: req.auth().userId };
+      const filter = { userId: req.user.userId };
       if (req.query.folderId) filter.folderId = req.query.folderId;
       if (req.query.search) {
         filter.$text = { $search: String(req.query.search) };
@@ -104,7 +103,7 @@ router.patch(
       const id = req.params.id;
       const existing = await Bookmark.findOne({
         _id: id,
-        userId: req.auth().userId,
+        userId: req.user.userId,
       });
       if (!existing) {
         await session.abortTransaction();
@@ -117,7 +116,7 @@ router.patch(
         String(updates.folderId) !== String(existing.folderId);
 
       const updated = await Bookmark.findOneAndUpdate(
-        { _id: id, userId: req.auth().userId },
+        { _id: id, userId: req.user.userId },
         { $set: updates },
         { new: true, session }
       );
@@ -125,12 +124,12 @@ router.patch(
       if (movingFolder) {
         // Ajustar contadores
         await Folder.updateOne(
-          { _id: existing.folderId, userId: req.auth().userId },
+          { _id: existing.folderId, userId: req.user.userId },
           { $inc: { bookmarksCount: -1 } },
           { session }
         );
         await Folder.updateOne(
-          { _id: updated.folderId, userId: req.auth().userId },
+          { _id: updated.folderId, userId: req.user.userId },
           { $inc: { bookmarksCount: 1 } },
           { session }
         );
@@ -153,7 +152,7 @@ router.delete("/:id", param("id").isMongoId(), async (req, res) => {
   session.startTransaction();
   try {
     const doc = await Bookmark.findOneAndDelete(
-      { _id: req.params.id, userId: req.auth().userId },
+      { _id: req.params.id, userId: req.user.userId },
       { session }
     );
     if (!doc) {
@@ -161,7 +160,7 @@ router.delete("/:id", param("id").isMongoId(), async (req, res) => {
       return res.status(404).json({ error: "Bookmark not found" });
     }
     await Folder.updateOne(
-      { _id: doc.folderId, userId: req.auth().userId },
+      { _id: doc.folderId, userId: req.user.userId },
       { $inc: { bookmarksCount: -1 } },
       { session }
     );
