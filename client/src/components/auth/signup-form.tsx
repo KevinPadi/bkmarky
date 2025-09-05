@@ -23,20 +23,15 @@ const SignUpForm = () => {
     }
   };
   return (
-    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+    <form className="space-y-4 w-full" onSubmit={handleSubmit(onSubmit)}>
       {/* Name */}
       <div>
-        <label
-          htmlFor="name"
-          className="block text-sm font-medium text-neutral-700"
-        >
-          Name
-        </label>
         <input
           maxLength={50}
-          type="string"
+          type="text"
           id="name"
-          className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-0 focus:outline-amber-500 focus:border-amber-500 border-neutral-300 transition-colors ease-in-out duration-300"
+          className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-0 focus:outline-white/80 focus:border-white/80 border-neutral-white/15 transition-colors ease-in-out duration-300 text-sm"
+          placeholder="Your name"
           {...register("name")}
         />
         {errors.name && (
@@ -46,18 +41,12 @@ const SignUpForm = () => {
 
       {/* Email */}
       <div>
-        <label
-          htmlFor="email"
-          className="block text-sm font-medium text-neutral-700"
-        >
-          Email
-        </label>
         <input
           maxLength={100}
           type="email"
           id="email"
-          className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-0 focus:outline-amber-500 focus:border-amber-500 border-neutral-300 transition-colors ease-in-out duration-300"
-          placeholder="e@example.com"
+          className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-0 focus:outline-white/80 focus:border-white/80 border-neutral-white/15 transition-colors ease-in-out duration-300 text-sm"
+          placeholder="Your email"
           {...register("email")}
         />
         {errors.email && (
@@ -67,18 +56,14 @@ const SignUpForm = () => {
 
       {/* Password */}
       <div>
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium text-neutral-700"
-        >
-          Password
-        </label>
         <div className="relative">
           <input
             minLength={6}
             type={isVisible ? "text" : "password"}
             id="password"
-            className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-0 focus:outline-amber-500 focus:border-amber-500 border-neutral-300 transition-colors ease-in-out duration-300"
+            className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-0 focus:outline-white/80 focus:border-white/80 border-neutral-white/15 transition-colors ease-in-out duration-300 text-sm"
+            {...register("password")}
+            placeholder="You password"
             {...register("password")}
           />
           <button
@@ -101,7 +86,7 @@ const SignUpForm = () => {
       {/* Submit */}
       <button
         type="submit"
-        className="w-full px-4 py-2 text-white bg-amber-500 rounded-lg hover:bg-amber-400 transition hover:cursor-pointer"
+        className="w-full px-4 py-2 text-black bg-neutral-200 rounded-lg hover:bg-neutral-300 transition hover:cursor-pointer active:scale-95"
       >
         {isSubmitting ? (
           <LoaderCircle className="animate-spin mx-auto" />
