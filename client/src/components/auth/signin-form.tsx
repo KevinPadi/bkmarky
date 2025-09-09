@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { Eye, EyeClosed, LoaderCircle } from "lucide-react";
+import { Eye, EyeClosed, LoaderCircle, LockIcon, Mail } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useAuthStore } from "@/stores/auth-store";
 import { loginSchema, type LoginSchema } from "@/schemas/login_schema";
+import { Button } from "../ui/button";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
 
 const SignInForm = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -25,57 +28,72 @@ const SignInForm = () => {
   return (
     <form className="space-y-4 w-full" onSubmit={handleSubmit(onSubmit)}>
       {/* Email */}
-      <div>
-        <input
-          type="email"
-          id="email"
-          className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-0 focus:outline-white/80 focus:border-white/80 border-neutral-white/15 transition-colors ease-in-out duration-300 text-sm"
-          placeholder="Your email"
-          {...register("email")}
-        />
+      <div className="grid gap-3">
+        <Label htmlFor="email" className="text-muted-foreground">
+          Email
+        </Label>
+        <div className="w-full relative">
+          <Mail className="size-4 stroke-[1.5] stroke-muted-foreground absolute top-1/2 -translate-y-1/2 left-2" />
+          <Input
+            className="pl-8"
+            autoFocus
+            id="email"
+            type="email"
+            placeholder="mail@example.com"
+            required
+            {...register("email")}
+          />
+        </div>
         {errors.email && (
           <p className="text-red-500 text-sm">{errors.email.message}</p>
         )}
       </div>
-
       {/* Password */}
-      <div>
-        <div className="relative">
-          <input
-            type={isVisible ? "text" : "password"}
+      <div className="grid gap-3">
+        <Label htmlFor="password" className="text-muted-foreground">
+          Password
+        </Label>
+        <div className="w-full relative">
+          <LockIcon className="size-4 stroke-[1.5] stroke-muted-foreground absolute top-1/2 -translate-y-1/2 left-2" />
+          <Input
+            className="pl-8"
+            autoFocus
             id="password"
-            className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-0 focus:outline-white/80 focus:border-white/80 border-neutral-white/15 transition-colors ease-in-out duration-300 text-sm"
+            type={isVisible ? "text" : "password"}
+            placeholder="•••••••••••"
+            required
             {...register("password")}
-            placeholder="You password"
           />
-          <button
+          <Button
             type="button"
+            variant={"ghost"}
+            className="absolute top-1/2 -translate-y-1/2 right-1 size-7"
             onClick={() => setIsVisible(!isVisible)}
-            className="absolute inset-y-0 end-1 top-2 size-fit p-1 rounded-lg hover:bg-neutral-100 hover:cursor-pointer text-neutral-500"
           >
             {isVisible ? (
               <Eye strokeWidth={1.5} />
             ) : (
               <EyeClosed strokeWidth={1.5} />
             )}
-          </button>
+          </Button>
         </div>
-        {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password.message}</p>
+        {errors.email && (
+          <p className="text-red-500 text-sm">{errors.email.message}</p>
         )}
       </div>
 
       {/* Submit */}
-      <button
+      <Button
         type="submit"
-        className="w-full px-4 py-2 text-black bg-neutral-200 rounded-lg hover:bg-neutral-300 transition hover:cursor-pointer font-medium active:scale-95"
+        variant={"default"}
+        className="w-full rounded-lg active:scale-95"
       >
         {isSubmitting ? (
           <LoaderCircle className="animate-spin mx-auto" />
         ) : (
-          "Sign in"
+          "Log in"
         )}
-      </button>
+      </Button>
     </form>
   );
 };
