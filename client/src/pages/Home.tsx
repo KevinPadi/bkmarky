@@ -231,12 +231,18 @@ const Home = () => {
           <div className="flex gap-2">
             <Tooltip>
               <TooltipTrigger>
-                <Button variant={"outline"} size={"sm"} className="size-8">
-                  <GitHub />
-                </Button>
+                <a
+                  href="https://github.com/KevinPadi/bkmarky"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button variant={"outline"} size={"sm"} className="size-8">
+                    <GitHub />
+                  </Button>
+                </a>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Code</p>
+                <p>GitHub</p>
               </TooltipContent>
             </Tooltip>
             <Tooltip>
