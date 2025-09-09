@@ -15,14 +15,20 @@ import XformerlyTwitter from "@/assets/svg/twitter";
 import Reddit from "@/assets/svg/reddit";
 import GoogleDrive from "@/assets/svg/google-drive";
 import Instagram from "@/assets/svg/instagram";
+import GitHub from "@/assets/svg/github";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const bookmarks = [
   {
     title: "YouTube",
     url: "https://www.youtube.com",
     img: YouTube,
-    top: "10%",
-    left: "20%",
+    top: "8%",
+    left: "13%",
     depth: 1,
   },
   {
@@ -30,8 +36,8 @@ const bookmarks = [
     url: "https://notion.com",
     img: Notion,
     top: "18%",
-    left: "22%",
-    depth: 2,
+    left: "17%",
+    depth: 1.5,
   },
   {
     title: "Discord",
@@ -70,7 +76,7 @@ const bookmarks = [
     url: "https://open.spotify.com",
     img: Spotify,
     top: "58%",
-    left: "10%",
+    left: "5%",
     depth: 1.5,
   },
   {
@@ -78,14 +84,15 @@ const bookmarks = [
     url: "https://drive.google.com",
     img: GoogleDrive,
     top: "70%",
-    left: "13%",
+    left: "8%",
     depth: 1,
   },
 ];
 
 const Home = () => {
   return (
-    <section className="px-4 max-h-screen w-full h-screen overflow-hidden relative flex flex-col justify-center items-center max-w-6xl mx-auto">
+    <section className="px-4 max-h-screen w-full h-screen overflow-hidden relative flex flex-col justify-center items-center">
+      <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_35%_at_50%_20%,#000_0%,transparent_110%)]"></div>
       <Floating className="hidden md:block">
         {bookmarks.map(({ img: Icon, ...i }) => (
           <a
@@ -99,7 +106,7 @@ const Home = () => {
           >
             <FloatingElement depth={i.depth}>
               <div className="flex items-center gap-3 p-4 rounded-3xl bg-foreground/20 dark:bg-muted/30 backdrop-blur-xs border-2 hover:cursor-pointer transition-transform hover:scale-105">
-                <Icon className="size-14" />
+                <Icon className="size-10" />
               </div>
             </FloatingElement>
           </a>
@@ -221,7 +228,26 @@ const Home = () => {
               Kevin
             </a>
           </span>
-          <ModeToggle />
+          <div className="flex gap-2">
+            <Tooltip>
+              <TooltipTrigger>
+                <Button variant={"outline"} size={"sm"} className="size-8">
+                  <GitHub />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Code</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger>
+                <ModeToggle />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Toggle theme</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </div>
       </footer>
     </section>
