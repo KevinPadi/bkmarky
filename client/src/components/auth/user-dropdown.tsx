@@ -17,7 +17,7 @@ const UserDropdown = () => {
       <DropdownMenuTrigger asChild>
         <Button variant={"ghost"} className="px-2">
           <span className="text-sm text-muted-foreground">{user?.name}</span>
-          <Avatar className="size-7">
+          <Avatar className="size-6">
             <AvatarImage src={`https://avatar.vercel.sh/${user?._id}`} />
             <AvatarFallback className="uppercase">{fallback}</AvatarFallback>
           </Avatar>
