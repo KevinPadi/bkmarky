@@ -1,10 +1,20 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import logo from "../assets/logo.svg";
 import SignUpForm from "@/components/auth/signup-form";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
+import { useAuthStore } from "@/stores/auth-store";
+import { useEffect } from "react";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const { user, checkAuth } = useAuthStore();
+
+  if (user) navigate("/bookmarks");
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
   return (
     <section className="flex flex-col gap-4 items-center justify-center h-screen p-4 relative">
       <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_35%_at_50%_20%,#000_0%,transparent_110%)]"></div>

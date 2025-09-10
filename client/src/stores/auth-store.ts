@@ -18,9 +18,9 @@ interface AuthStore {
   user: User | null;
   loading: boolean;
   checkAuth: () => Promise<void>;
-  login: (data: AuthData) => Promise<void>;
+  login: (data: AuthData) => Promise<boolean>;
   loginAsGuest: () => Promise<void>;
-  register: (data: AuthData) => Promise<void>;
+  register: (data: AuthData) => Promise<boolean>;
   logout: () => Promise<void>;
   deleteUser: () => Promise<void>;
 }
@@ -28,8 +28,6 @@ interface AuthStore {
 const BACKEND_URL = import.meta.env.VITE_API_URL;
 
 export const useAuthStore = create<AuthStore>((set) => {
-  // const navigate = useNavigate();
-
   const checkAuth = async () => {
     set({ loading: true });
     try {
@@ -56,7 +54,7 @@ export const useAuthStore = create<AuthStore>((set) => {
         withCredentials: true,
       });
       await checkAuth();
-      // navigate("/board");
+      return true;
     } catch (error: unknown) {
       let errMsg = "Error al eliminar la carpeta";
 
@@ -69,6 +67,7 @@ export const useAuthStore = create<AuthStore>((set) => {
       }
 
       toast.error(errMsg);
+      return false;
     }
   };
 
@@ -86,8 +85,6 @@ export const useAuthStore = create<AuthStore>((set) => {
         "Log in as a guest. This account will be deleted in 1 hour.",
         {}
       );
-      // navigate("/board");
-
       setTimeout(async () => {
         await fetch(`${BACKEND_URL}/api/auth/logout`, {
           method: "POST",
@@ -95,7 +92,6 @@ export const useAuthStore = create<AuthStore>((set) => {
         });
         set({ user: null });
         toast.error("Guest account expired. Please log in again.", {});
-        // navigate("/");
       }, 60 * 60 * 1000);
     }
   };
@@ -106,7 +102,7 @@ export const useAuthStore = create<AuthStore>((set) => {
         withCredentials: true,
       });
       await checkAuth();
-      // navigate("/board");
+      return true;
     } catch (error: unknown) {
       let errMsg = "Error al eliminar la carpeta";
 
@@ -119,6 +115,7 @@ export const useAuthStore = create<AuthStore>((set) => {
       }
 
       toast.error(errMsg);
+      return false;
     }
   };
 
@@ -130,7 +127,6 @@ export const useAuthStore = create<AuthStore>((set) => {
         { withCredentials: true }
       );
       set({ user: null });
-      // navigate("/");
     } catch {
       toast.error("Error al cerrar sesión");
     }
@@ -143,7 +139,6 @@ export const useAuthStore = create<AuthStore>((set) => {
       });
       set({ user: null });
       toast.success("Cuenta eliminada exitosamente");
-      // navigate("/register");
     } catch (error: unknown) {
       let errMsg = "Error al eliminar la carpeta";
 

@@ -14,11 +14,12 @@ import { authSchema, type AuthSchema } from "@/schemas/auth_schema";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+import { useNavigate } from "react-router";
 
 const SignUpForm = () => {
   const [isVisible, setIsVisible] = useState(false);
   const { register: registerUser } = useAuthStore();
-
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -27,7 +28,8 @@ const SignUpForm = () => {
 
   const onSubmit = async (data: AuthSchema) => {
     try {
-      await registerUser(data);
+      const ok = await registerUser(data);
+      if (ok) navigate("/bookmarks");
     } catch (error) {
       console.error("Login error:", error);
     }
@@ -66,7 +68,6 @@ const SignUpForm = () => {
           <Mail className="size-4 stroke-[1.5] stroke-muted-foreground absolute top-1/2 -translate-y-1/2 left-2" />
           <Input
             className="pl-8"
-            autoFocus
             id="email"
             type="email"
             placeholder="mail@example.com"
@@ -88,7 +89,6 @@ const SignUpForm = () => {
           <LockIcon className="size-4 stroke-[1.5] stroke-muted-foreground absolute top-1/2 -translate-y-1/2 left-2" />
           <Input
             className="pl-8"
-            autoFocus
             id="password"
             type={isVisible ? "text" : "password"}
             placeholder="•••••••••••"
