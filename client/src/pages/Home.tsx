@@ -21,6 +21,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useAuthStore } from "@/stores/auth-store";
+import UserDropdown from "@/components/auth/user-dropdown";
+import { useEffect } from "react";
 
 const bookmarks = [
   {
@@ -90,6 +93,12 @@ const bookmarks = [
 ];
 
 const Home = () => {
+  const { loading, user, checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
   return (
     <section className="px-4 max-h-screen w-full h-screen overflow-hidden relative flex flex-col justify-center items-center">
       <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_35%_at_50%_20%,#000_0%,transparent_110%)]"></div>
@@ -118,18 +127,22 @@ const Home = () => {
           <img src={logo} alt="bkmarky logo" className="size-7" />
           <span className="hidden sm:block">bkmarky</span>
         </div>
-        <div className="flex items-center gap-2">
-          <Link to={"/login"}>
-            <Button size={"sm"} variant={"outline"}>
-              Log in
-            </Button>
-          </Link>
-          <Link to={"/signup"}>
-            <Button size={"sm"} variant={"cta"}>
-              Get Started
-            </Button>
-          </Link>
-        </div>
+        {loading ? null : user !== null ? (
+          <UserDropdown />
+        ) : (
+          <div className="flex items-center gap-2">
+            <Link to={"/login"}>
+              <Button size={"sm"} variant={"outline"}>
+                Log in
+              </Button>
+            </Link>
+            <Link to={"/signup"}>
+              <Button size={"sm"} variant={"cta"}>
+                Get Started
+              </Button>
+            </Link>
+          </div>
+        )}
       </header>
 
       <div className="flex flex-col gap-4 items-center text-center relative">
@@ -201,18 +214,28 @@ const Home = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 0.4 }}
-          className="flex items-center gap-2"
+          className="flex items-center"
         >
-          <Link to={"/login"}>
-            <Button size={"lg"} variant={"outline"}>
-              Log in
-            </Button>
-          </Link>
-          <Link to={"/signup"}>
-            <Button size={"lg"} variant={"cta"}>
-              Get Started
-            </Button>
-          </Link>
+          {loading ? null : user !== null ? (
+            <Link to={"/bookmarks"}>
+              <Button size={"lg"} variant={"cta"}>
+                My bookmarks
+              </Button>
+            </Link>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link to={"/login"}>
+                <Button size={"lg"} variant={"outline"}>
+                  Log in
+                </Button>
+              </Link>
+              <Link to={"/signup"}>
+                <Button size={"lg"} variant={"cta"}>
+                  Get Started
+                </Button>
+              </Link>
+            </div>
+          )}
         </motion.div>
       </div>
 
