@@ -7,11 +7,12 @@ import { loginSchema, type LoginSchema } from "@/schemas/login_schema";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+import { useNavigate } from "react-router";
 
 const SignInForm = () => {
   const [isVisible, setIsVisible] = useState(false);
   const { login } = useAuthStore();
-
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -20,7 +21,8 @@ const SignInForm = () => {
 
   const onSubmit = async (data: LoginSchema) => {
     try {
-      await login(data);
+      const ok = await login(data);
+      if (ok) navigate("/bookmarks");
     } catch (error) {
       console.error("Error en el login:", error);
     }
@@ -57,7 +59,6 @@ const SignInForm = () => {
           <LockIcon className="size-4 stroke-[1.5] stroke-muted-foreground absolute top-1/2 -translate-y-1/2 left-2" />
           <Input
             className="pl-8"
-            autoFocus
             id="password"
             type={isVisible ? "text" : "password"}
             placeholder="•••••••••••"
