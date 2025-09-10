@@ -67,7 +67,7 @@ const FolderSwitcher = () => {
                     >
                       {" "}
                       <img
-                        className="size-6 rounded-xl"
+                        className="size-6 rounded"
                         src={`https://avatar.vercel.sh/${folder._id}`}
                         alt="folder avatar"
                       />
