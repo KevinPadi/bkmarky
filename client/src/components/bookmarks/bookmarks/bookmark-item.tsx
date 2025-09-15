@@ -27,7 +27,7 @@ import {
   moveBookmarkToFolder,
   deleteBookmark,
 } from "@/api/bookmarks";
-import { motion } from "motion/react";
+import { CommandItem } from "cmdk";
 
 type BookmarkItemProps = {
   bookmark: Bookmark;
@@ -69,7 +69,7 @@ const BookmarkItem = ({ bookmark }: BookmarkItemProps) => {
   };
 
   return (
-    <motion.div exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+    <CommandItem>
       <ContextMenu>
         <ContextMenuTrigger>
           <li
@@ -174,7 +174,7 @@ const BookmarkItem = ({ bookmark }: BookmarkItemProps) => {
           </form>
         </DialogContent>
       </Dialog>
-    </motion.div>
+    </CommandItem>
   );
 };
 

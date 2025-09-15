@@ -1,22 +1,24 @@
-import { useEffect, useRef, useState } from "react";
-import { Input } from "../ui/input";
-import { PlusIcon } from "lucide-react";
-import { type Bookmark } from "@/stores/global-state";
-import { toast } from "sonner";
-import { isAxiosError } from "axios";
-import { addBookmark } from "@/api/bookmarks";
 import { useFolderStore } from "@/stores/global-state";
-import { cn } from "@/lib/utils";
+import { useEffect, useRef } from "react";
+import type { Bookmark } from "@/stores/global-state";
+import { addBookmark } from "@/api/bookmarks";
+import { isAxiosError } from "axios";
+import { toast } from "sonner";
+import { Command } from "cmdk";
 
-const CreateBookmarkInput = () => {
+type PropsType = {
+  value: string;
+  query: string;
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
+};
+
+const CreateBookmarkInput = ({ value, query, setQuery }: PropsType) => {
+  const { activeFolder } = useFolderStore();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [newBookmark, setNewBookmark] = useState("");
-  const activeFolder = useFolderStore((state) => state.activeFolder);
-
   const addNewBookmark = () => {
-    if (!newBookmark.trim() || !activeFolder) return;
+    if (!query.trim() || !activeFolder) return;
 
-    let url = newBookmark.trim();
+    let url = query.trim();
     if (!url.startsWith("http://") && !url.startsWith("https://")) {
       url = "https://" + url;
     }
@@ -35,7 +37,7 @@ const CreateBookmarkInput = () => {
         folderId: activeFolder?._id,
       };
       addBookmark(bookmark);
-      setNewBookmark("");
+      setQuery("");
     } catch (error: unknown) {
       let errMsg = "Error adding bookmark";
 
@@ -53,7 +55,16 @@ const CreateBookmarkInput = () => {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "j" && (e.metaKey || e.ctrlKey)) {
+      if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || e.key === "/") {
+        if (
+          (e.target instanceof HTMLElement && e.target.isContentEditable) ||
+          e.target instanceof HTMLInputElement ||
+          e.target instanceof HTMLTextAreaElement ||
+          e.target instanceof HTMLSelectElement
+        ) {
+          return;
+        }
+
         e.preventDefault();
         inputRef.current?.focus();
       }
@@ -61,36 +72,21 @@ const CreateBookmarkInput = () => {
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
-
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        addNewBookmark();
-        setNewBookmark("");
+    <Command.Input
+      ref={inputRef}
+      value={query}
+      onValueChange={setQuery}
+      className="rounded-full border border-border size-full focus:ring-[3px] focus:ring-ring/50 outline-none pl-10 pr-20 transition duration-200 bg-muted/50 dark:bg-muted/20"
+      onKeyDown={(e) => {
+        if (e.key === "Enter" && query.trim()) {
+          if (!activeFolder) return;
+          if (!value) {
+            addNewBookmark();
+          }
+        }
       }}
-      className={cn(
-        "relative flex items-center rounded-md border focus-within:ring-1 focus-within:ring-ring px-2",
-        !activeFolder && "opacity-50 pointer-events-none"
-      )}
-    >
-      <PlusIcon size={26} strokeWidth={1.5} className="text-muted-foreground" />
-      <Input
-        disabled={!activeFolder}
-        required
-        value={newBookmark}
-        onChange={(e) => setNewBookmark(e.target.value)}
-        type="text"
-        autoFocus
-        ref={inputRef}
-        placeholder="Type your bookmark here..."
-        className="border-0 focus-visible:ring-0 bg-transparent
-         dark:bg-transparent h-12 disabled:pointer-events-none"
-      />
-      <kbd className="bg-muted text-muted-foreground pointer-events-none inline-flex h-6 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none">
-        <span className="text-xs pt-1">⌘</span>J
-      </kbd>{" "}
-    </form>
+    />
   );
 };
 

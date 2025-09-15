@@ -12,15 +12,34 @@ export const addBookmark = async ({
   domain,
   favicon,
 }: Omit<Bookmark, "_id" | "createdAt">) => {
+  const tempId = `temp-${Date.now()}`;
+  const optimisticBookmark: Bookmark = {
+    _id: tempId,
+    title,
+    url,
+    folderId,
+    domain,
+    favicon,
+    createdAt: new Date().toISOString(),
+  };
+
+  const { addBookmark, removeBookmark, updateBookmark } =
+    useFolderStore.getState();
+
+  addBookmark(optimisticBookmark);
+
   try {
     const { data } = await axios.post(
       `${BACKEND_URL}/api/bookmarks`,
       { title, url, folderId, domain, favicon },
       { withCredentials: true }
     );
-    useFolderStore.getState().addBookmark(data);
+
+    updateBookmark(tempId, data);
     return data;
   } catch (error: unknown) {
+    removeBookmark(tempId);
+
     let errMsg = "Error adding bookmark";
     if (isAxiosError(error)) {
       errMsg = error.response?.data?.error || error.message || errMsg;
