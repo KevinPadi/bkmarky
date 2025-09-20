@@ -60,17 +60,30 @@ export const updateBookmark = async ({
   bookmarkId: string;
   updates: Partial<Bookmark>;
 }) => {
+  const store = useFolderStore.getState();
+  const prev = store.bookmarks.find((b) => b._id === bookmarkId);
+
+  if (!prev) return;
+
+  // 👀 Optimistic update
+  store.updateBookmarkTitle({ ...prev, ...updates });
+  console.log("update");
+
   try {
     const { data } = await axios.patch(
       `${BACKEND_URL}/api/bookmarks/${bookmarkId}`,
       updates,
       { withCredentials: true }
     );
-    useFolderStore.getState().removeBookmark(data._id);
-    useFolderStore.getState().updateBookmarkTitle(data);
+
+    // sync con backend
+    store.updateBookmarkTitle(data);
     return data;
   } catch (error: unknown) {
-    let errMsg = "Error adding bookmark";
+    // rollback
+    store.updateBookmarkTitle(prev);
+
+    let errMsg = "Error updating bookmark";
     if (isAxiosError(error)) {
       errMsg = error.response?.data?.error || error.message || errMsg;
     } else if (error instanceof Error) {
@@ -83,7 +96,6 @@ export const updateBookmark = async ({
   }
 };
 
-// ...existing code...
 export const moveBookmarkToFolder = async ({
   bookmarkId,
   newFolderId,
