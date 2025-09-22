@@ -1,90 +1,61 @@
-import { useFolderStore, type Bookmark } from "@/stores/global-state";
+import { CommandItem, CommandShortcut } from "@/components/ui/command";
+import {
+  ArrowBigRightDash,
+  Copy,
+  CornerDownLeft,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
   ContextMenuSub,
-  ContextMenuSubContent,
   ContextMenuSubTrigger,
+  ContextMenuSubContent,
+  ContextMenuShortcut,
 } from "@/components/ui/context-menu";
-import { ArrowBigRightDash, Copy, Pencil, Trash2 } from "lucide-react";
-import { useCopyToClipboard } from "@uidotdev/usehooks";
-import { toast } from "sonner";
-import { useState, type FormEvent } from "react";
-import { Input } from "@/components/ui/input";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogClose,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import {
-  updateBookmark,
-  moveBookmarkToFolder,
-  deleteBookmark,
-} from "@/api/bookmarks";
-import { CommandItem } from "cmdk";
+import { useFolderStore, type Bookmark } from "@/stores/global-state";
+import { memo } from "react";
+import { deleteBookmark, moveBookmarkToFolder } from "@/api/bookmarks";
+import { useBookmarkActions } from "@/hooks/useBookmarkActions";
 
 type BookmarkItemProps = {
   bookmark: Bookmark;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const BookmarkItem = ({ bookmark }: BookmarkItemProps) => {
-  const folders = useFolderStore((state) => state.folders);
-  const updateBookmarkTitle = useFolderStore(
-    (state) => state.updateBookmarkTitle
-  );
-  const [, copyToClipboard] = useCopyToClipboard();
-  const [isEditing, setIsEditing] = useState(false);
-  const [inputValue, setInputValue] = useState(bookmark.title);
+export const BookmarkItem = memo(
+  ({ bookmark, setIsOpen }: BookmarkItemProps) => {
+    const { handleCopy } = useBookmarkActions();
+    const { folders, activeFolder } = useFolderStore();
 
-  const handleCopy = (text: string) => {
-    copyToClipboard(text);
-    toast.success("Link copied to clipboard");
-  };
-  const formatDate = (date: string) => {
-    const parsedDate = new Date(date);
-    const formattedDate = new Intl.DateTimeFormat("en-US", {
-      day: "2-digit",
-      month: "short",
-    }).format(parsedDate);
-    return formattedDate;
-  };
+    const formatDate = (date: string) => {
+      const parsedDate = new Date(date);
+      const formattedDate = new Intl.DateTimeFormat("en-US", {
+        day: "2-digit",
+        month: "short",
+      }).format(parsedDate);
+      return formattedDate;
+    };
 
-  const renameBookmark = async (e: FormEvent) => {
-    e.preventDefault();
-
-    const updated = await updateBookmark({
-      bookmarkId: bookmark._id,
-      updates: { title: inputValue },
-    });
-
-    updateBookmarkTitle(updated);
-
-    setIsEditing(false);
-  };
-
-  return (
-    <CommandItem>
+    return (
       <ContextMenu>
         <ContextMenuTrigger>
-          <li
-            key={bookmark._id}
-            className="my-2 p-3 relative h-14 flex items-center justify-between hover:bg-muted dark:hover:bg-muted/50 rounded-lg transition"
+          <CommandItem
+            onSelect={(value) => window.open(value, "_blank")}
+            key={bookmark.url}
+            value={bookmark.url}
+            className="group flex items-center justify-between my-2 data-[selected=true]:bg-input/50 dark:data-[selected=true]:bg-input/20 h-9 rounded-md border border-transparent !px-3 font-medium"
           >
-            <a
-              className="inset-0 absolute top-0"
-              href={bookmark.url}
-              target="_blank"
-              rel="noopener noreferrer"
-            />
             <div className="flex gap-3 items-center">
               <img
                 src={bookmark.favicon}
+                onError={(e) => {
+                  // Fallback para favicons rotos
+                  e.currentTarget.style.display = "none";
+                }}
                 alt="Bookmark favicon"
                 className="size-6"
               />
@@ -96,20 +67,25 @@ const BookmarkItem = ({ bookmark }: BookmarkItemProps) => {
               </div>
             </div>
             <div>
-              <span className="text-muted-foreground">
+              <span className="block group-data-[selected=true]:hidden text-muted-foreground transition">
                 {formatDate(bookmark.createdAt)}
               </span>
+              <CommandShortcut className="hidden group-data-[selected=true]:block text-muted-foreground p-1 transition">
+                <CornerDownLeft className="size-3" />
+              </CommandShortcut>
             </div>
-          </li>
+          </CommandItem>
         </ContextMenuTrigger>
         <ContextMenuContent className="w-40">
           <ContextMenuItem onSelect={() => handleCopy(bookmark.url)}>
             <Copy />
             Copy
+            <ContextMenuShortcut>⌘C</ContextMenuShortcut>
           </ContextMenuItem>
-          <ContextMenuItem onSelect={() => setIsEditing(!isEditing)}>
+          <ContextMenuItem onSelect={() => setIsOpen((prev) => !prev)}>
             <Pencil />
             Rename
+            <ContextMenuShortcut>⌘E</ContextMenuShortcut>
           </ContextMenuItem>
           <ContextMenuSub>
             <ContextMenuSubTrigger disabled={folders.length === 0}>
@@ -120,6 +96,7 @@ const BookmarkItem = ({ bookmark }: BookmarkItemProps) => {
               {folders.length > 0 &&
                 folders.map((folder) => (
                   <ContextMenuItem
+                    disabled={folder._id === activeFolder?._id}
                     onSelect={() =>
                       moveBookmarkToFolder({
                         bookmarkId: bookmark._id,
@@ -130,7 +107,7 @@ const BookmarkItem = ({ bookmark }: BookmarkItemProps) => {
                     key={folder._id}
                   >
                     <img
-                      className="size-4 rounded-full"
+                      className="size-5 rounded"
                       src={`https://avatar.vercel.sh/${folder._id}`}
                       alt="folder avatar"
                     />
@@ -145,37 +122,10 @@ const BookmarkItem = ({ bookmark }: BookmarkItemProps) => {
           >
             <Trash2 />
             Delete
+            <ContextMenuShortcut>⌘D</ContextMenuShortcut>
           </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
-      <Dialog open={isEditing} onOpenChange={setIsEditing}>
-        <DialogContent>
-          <form onSubmit={(e) => renameBookmark(e)}>
-            <DialogHeader>
-              <DialogTitle>Rename bookmark</DialogTitle>
-            </DialogHeader>
-            <div className="mt-4">
-              <Input
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                autoFocus={true}
-              />
-            </div>
-            <DialogFooter className="mt-4">
-              <DialogClose asChild>
-                <Button variant="outline" type="button">
-                  Cancel
-                </Button>
-              </DialogClose>
-              <Button type="submit" disabled={!inputValue.trim()}>
-                Rename
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </CommandItem>
-  );
-};
-
-export default BookmarkItem;
+    );
+  }
+);

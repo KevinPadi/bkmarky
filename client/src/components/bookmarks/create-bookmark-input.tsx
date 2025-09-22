@@ -55,7 +55,13 @@ const CreateBookmarkInput = ({ value, query, setQuery }: PropsType) => {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || e.key === "/") {
+      const isSearchShortcut =
+        (e.key === "k" && (e.metaKey || e.ctrlKey)) ||
+        e.key === "/" ||
+        e.key === "ArrowUp" ||
+        e.key === "ArrowDown";
+
+      if (isSearchShortcut) {
         if (
           (e.target instanceof HTMLElement && e.target.isContentEditable) ||
           e.target instanceof HTMLInputElement ||
@@ -72,6 +78,7 @@ const CreateBookmarkInput = ({ value, query, setQuery }: PropsType) => {
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
+
   return (
     <Command.Input
       ref={inputRef}

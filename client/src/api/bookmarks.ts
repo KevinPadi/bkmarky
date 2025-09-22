@@ -65,9 +65,8 @@ export const updateBookmark = async ({
 
   if (!prev) return;
 
-  // 👀 Optimistic update
+  // Optimistic update
   store.updateBookmarkTitle({ ...prev, ...updates });
-  console.log("update");
 
   try {
     const { data } = await axios.patch(
