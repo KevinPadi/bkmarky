@@ -37,10 +37,9 @@ export const FolderSwitcherTrigger = forwardRef<
   return (
     <Button
       ref={ref}
-      variant="ghost"
-      size={"lg"}
+      variant="outline"
       role="combobox"
-      className="w-fit p-2 data-[state=open]:bg-accent dark:data-[state=open]:bg-accent/50 rounded-[10px]"
+      className="w-fit p-1.5 data-[state=open]:bg-accent dark:data-[state=open]:bg-accent/50 rounded-[10px] transition-none"
       {...props}
     >
       {!activeFolder ? (

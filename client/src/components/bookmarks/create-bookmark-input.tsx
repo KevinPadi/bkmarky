@@ -84,7 +84,7 @@ const CreateBookmarkInput = ({ value, query, setQuery }: PropsType) => {
       ref={inputRef}
       value={query}
       onValueChange={setQuery}
-      className="rounded-full border border-border size-full focus:ring-[3px] focus:ring-ring/50 outline-none pl-10 pr-20 transition duration-200 bg-muted/50 dark:bg-muted/20"
+      className="rounded-full border border-border size-full focus:ring-[3px] focus:ring-ring/50 outline-none pl-10 pr-20 transition-none bg-muted/50 dark:bg-muted/20"
       onKeyDown={(e) => {
         if (e.key === "Enter" && query.trim()) {
           if (!activeFolder) return;

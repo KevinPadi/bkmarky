@@ -47,13 +47,12 @@ export const BookmarkItem = memo(
             onSelect={(value) => window.open(value, "_blank")}
             key={bookmark.url}
             value={bookmark.url}
-            className="group flex items-center justify-between my-2 data-[selected=true]:bg-input/50 dark:data-[selected=true]:bg-input/20 h-9 rounded-md border border-transparent !px-3 font-medium"
+            className="group flex items-center justify-between my-2 data-[selected=true]:bg-input/50 dark:data-[selected=true]:bg-input/20 rounded-md border border-transparent p-2 font-medium"
           >
             <div className="flex gap-3 items-center">
               <img
                 src={bookmark.favicon}
                 onError={(e) => {
-                  // Fallback para favicons rotos
                   e.currentTarget.style.display = "none";
                 }}
                 alt="Bookmark favicon"
@@ -67,10 +66,10 @@ export const BookmarkItem = memo(
               </div>
             </div>
             <div>
-              <span className="block group-data-[selected=true]:hidden text-muted-foreground transition">
+              <span className="block group-data-[selected=true]:hidden text-muted-foreground">
                 {formatDate(bookmark.createdAt)}
               </span>
-              <CommandShortcut className="hidden group-data-[selected=true]:block text-muted-foreground p-1 transition">
+              <CommandShortcut className="hidden group-data-[selected=true]:block text-muted-foreground p-1">
                 <CornerDownLeft className="size-3" />
               </CommandShortcut>
             </div>
