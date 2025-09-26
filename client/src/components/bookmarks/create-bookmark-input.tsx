@@ -32,8 +32,6 @@ const CreateBookmarkInput = ({ value, query, setQuery }: PropsType) => {
         (await fetchPageTitle(url)) ||
         domain.charAt(0).toUpperCase() + domain.slice(1).split(".")[0];
 
-      console.log(title);
-
       const bookmark: Omit<Bookmark, "_id" | "createdAt"> = {
         title,
         url,

@@ -49,7 +49,7 @@ export const BookmarkItem = memo(
             value={bookmark.url}
             className="group flex items-center justify-between my-2 data-[selected=true]:bg-input/50 dark:data-[selected=true]:bg-input/20 rounded-md border border-transparent p-2 font-medium"
           >
-            <div className="flex gap-3 items-center">
+            <div className="flex gap-3 items-center max-w-3/4">
               <img
                 src={bookmark.favicon}
                 onError={(e) => {
@@ -58,8 +58,8 @@ export const BookmarkItem = memo(
                 alt="Bookmark favicon"
                 className="size-6 rounded"
               />
-              <div className="flex gap-2 items-center">
-                <span>{bookmark.title}</span>
+              <div className="flex gap-2 items-center max-w-full">
+                <span className="truncate">{bookmark.title}</span>
                 <span className="text-sm text-muted-foreground">
                   {bookmark.domain}
                 </span>
