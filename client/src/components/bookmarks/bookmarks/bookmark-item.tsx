@@ -56,7 +56,7 @@ export const BookmarkItem = memo(
                   e.currentTarget.style.display = "none";
                 }}
                 alt="Bookmark favicon"
-                className="size-6"
+                className="size-6 rounded"
               />
               <div className="flex gap-2 items-center">
                 <span>{bookmark.title}</span>
