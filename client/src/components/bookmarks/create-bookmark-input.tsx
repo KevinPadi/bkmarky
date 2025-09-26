@@ -1,7 +1,7 @@
 import { useFolderStore } from "@/stores/global-state";
 import { useEffect, useRef } from "react";
 import type { Bookmark } from "@/stores/global-state";
-import { addBookmark } from "@/api/bookmarks";
+import { addBookmark, fetchPageTitle } from "@/api/bookmarks";
 import { isAxiosError } from "axios";
 import { toast } from "sonner";
 import { Command } from "cmdk";
@@ -15,7 +15,8 @@ type PropsType = {
 const CreateBookmarkInput = ({ value, query, setQuery }: PropsType) => {
   const { activeFolder } = useFolderStore();
   const inputRef = useRef<HTMLInputElement>(null);
-  const addNewBookmark = () => {
+
+  const addNewBookmark = async () => {
     if (!query.trim() || !activeFolder) return;
 
     let url = query.trim();
@@ -26,21 +27,25 @@ const CreateBookmarkInput = ({ value, query, setQuery }: PropsType) => {
     try {
       const urlObj = new URL(url);
       const domain = urlObj.hostname.replace("www.", "");
+
       const title =
+        (await fetchPageTitle(url)) ||
         domain.charAt(0).toUpperCase() + domain.slice(1).split(".")[0];
+
+      console.log(title);
 
       const bookmark: Omit<Bookmark, "_id" | "createdAt"> = {
         title,
         url,
         domain,
         favicon: `https://www.google.com/s2/favicons?domain=${domain}&sz=32`,
-        folderId: activeFolder?._id,
+        folderId: activeFolder._id,
       };
-      addBookmark(bookmark);
+
+      await addBookmark(bookmark);
       setQuery("");
     } catch (error: unknown) {
       let errMsg = "Error adding bookmark";
-
       if (isAxiosError(error)) {
         errMsg = error.response?.data?.message || error.message || errMsg;
       } else if (error instanceof Error) {
@@ -48,7 +53,6 @@ const CreateBookmarkInput = ({ value, query, setQuery }: PropsType) => {
       } else if (typeof error === "string") {
         errMsg = error;
       }
-
       toast.error(errMsg);
     }
   };

@@ -175,3 +175,22 @@ export const deleteBookmark = async (bookmarkId: string) => {
     return false;
   }
 };
+
+export const fetchPageTitle = async (url: string): Promise<string> => {
+  try {
+    // const res = await fetch(
+    //   `${BACKEND_URL}/api/bookmarks/fetch-title?url=${encodeURIComponent(url)}`
+    // );
+    // const { title } = await res.json();
+    // return title;
+    const { data } = await axios.get(
+      `${BACKEND_URL}/api/bookmarks/fetch-title?url=${encodeURIComponent(url)}`,
+      {
+        withCredentials: true,
+      }
+    );
+    return data.title;
+  } catch {
+    return "";
+  }
+};
