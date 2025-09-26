@@ -88,7 +88,7 @@ const CreateBookmarkInput = ({ value, query, setQuery }: PropsType) => {
       onKeyDown={(e) => {
         if (e.key === "Enter" && query.trim()) {
           if (!activeFolder) return;
-          if (!value) {
+          if (!value || value === "add-item") {
             addNewBookmark();
           }
         }

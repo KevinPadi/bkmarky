@@ -3,7 +3,7 @@ import { Command } from "cmdk";
 import { useState, useMemo } from "react";
 import { Plus } from "lucide-react";
 
-import { CommandShortcut } from "../ui/command";
+import { CommandItem, CommandShortcut } from "../ui/command";
 import CreateBookmarkInput from "./create-bookmark-input";
 import BookmarkEditModal from "./bookmarks/bookmark-edit-modal";
 import { BookmarkItem } from "./bookmarks/bookmark-item";
@@ -14,13 +14,17 @@ const KEYBOARD_SHORTCUTS = [
   { key: "K", display: "K" },
 ] as const;
 
-const EmptyState = ({ query }: { query: string }) => (
-  <Command.Empty className="p-2 text-muted-foreground text-sm">
+const AddItem = ({ query }: { query: string }) => (
+  <CommandItem
+    forceMount={true}
+    value="add-item"
+    className="group flex items-center justify-between my-2 data-[selected=true]:bg-input/50 dark:data-[selected=true]:bg-input/20 rounded-md border border-transparent p-2 font-medium"
+  >
     <div className="flex gap-2 items-center">
       <Plus strokeWidth={1.5} className="size-5" />
-      <span>Add {query}</span>
+      <span className="text-muted-foreground">Add {query}</span>
     </div>
-  </Command.Empty>
+  </CommandItem>
 );
 
 const ShortcutDisplay = () => (
@@ -67,8 +71,6 @@ export const BookmarkCommand = () => {
         </div>
 
         <Command.List>
-          <EmptyState query={query} />
-
           <Command.Group>
             {bookmarks.map((bookmark) => (
               <BookmarkItem
@@ -78,6 +80,7 @@ export const BookmarkCommand = () => {
               />
             ))}
           </Command.Group>
+          {query && <AddItem query={query} />}
         </Command.List>
       </Command>
 
