@@ -1,10 +1,12 @@
 import { useFolderStore } from "@/stores/global-state";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Bookmark } from "@/stores/global-state";
 import { addBookmark, fetchPageTitle } from "@/api/bookmarks";
 import { isAxiosError } from "axios";
 import { toast } from "sonner";
 import { Command } from "cmdk";
+import { Loader, Plus } from "lucide-react";
+import { CommandShortcut } from "../ui/command";
 
 type PropsType = {
   value: string;
@@ -15,6 +17,7 @@ type PropsType = {
 const CreateBookmarkInput = ({ value, query, setQuery }: PropsType) => {
   const { activeFolder } = useFolderStore();
   const inputRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(false);
 
   const addNewBookmark = async () => {
     if (!query.trim() || !activeFolder) return;
@@ -25,6 +28,7 @@ const CreateBookmarkInput = ({ value, query, setQuery }: PropsType) => {
     }
 
     try {
+      setLoading(true);
       const urlObj = new URL(url);
       const domain = urlObj.hostname.replace("www.", "");
 
@@ -52,6 +56,8 @@ const CreateBookmarkInput = ({ value, query, setQuery }: PropsType) => {
         errMsg = error;
       }
       toast.error(errMsg);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -82,20 +88,34 @@ const CreateBookmarkInput = ({ value, query, setQuery }: PropsType) => {
   }, []);
 
   return (
-    <Command.Input
-      ref={inputRef}
-      value={query}
-      onValueChange={setQuery}
-      className="rounded-full border border-border size-full focus:ring-[3px] focus:ring-ring/50 outline-none pl-10 pr-20 transition-none bg-muted/50 dark:bg-muted/20"
-      onKeyDown={(e) => {
-        if (e.key === "Enter" && query.trim()) {
-          if (!activeFolder) return;
-          if (!value || value === "add-item") {
-            addNewBookmark();
+    <div className="w-full h-10 relative">
+      {loading ? (
+        <Loader className="absolute top-1/2 -translate-y-1/2 left-2 pointer-events-none stroke-muted-foreground animate-spin size-5" />
+      ) : (
+        <Plus
+          strokeWidth={1}
+          className="absolute top-1/2 -translate-y-1/2 left-2 pointer-events-none stroke-muted-foreground size-6"
+        />
+      )}
+      <Command.Input
+        ref={inputRef}
+        value={query}
+        onValueChange={setQuery}
+        className="rounded-lg border border-border size-full focus:ring-[3px] focus:ring-ring/50 outline-none pl-10 pr-5 lg:pr-20 transition-none bg-muted/50 dark:bg-muted/50"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && query.trim()) {
+            if (!activeFolder) return;
+            if (!value || value === "add-item") {
+              addNewBookmark();
+            }
           }
-        }
-      }}
-    />
+        }}
+      />
+      <div className="absolute hidden lg:flex items-center gap-1 right-2 top-1/2 -translate-y-1/2 ">
+        <CommandShortcut className="rounded">Ctrl</CommandShortcut>
+        <CommandShortcut className="rounded">K</CommandShortcut>
+      </div>
+    </div>
   );
 };
 

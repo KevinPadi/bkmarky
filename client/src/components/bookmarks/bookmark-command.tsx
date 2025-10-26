@@ -3,16 +3,11 @@ import { Command } from "cmdk";
 import { useState, useMemo } from "react";
 import { Plus } from "lucide-react";
 
-import { CommandItem, CommandShortcut } from "../ui/command";
+import { CommandItem } from "../ui/command";
 import CreateBookmarkInput from "./create-bookmark-input";
 import BookmarkEditModal from "./bookmarks/bookmark-edit-modal";
 import { BookmarkItem } from "./bookmarks/bookmark-item";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
-
-const KEYBOARD_SHORTCUTS = [
-  { key: "Ctrl", display: "Ctrl" },
-  { key: "K", display: "K" },
-] as const;
 
 const AddItem = ({ query }: { query: string }) => (
   <CommandItem
@@ -20,21 +15,11 @@ const AddItem = ({ query }: { query: string }) => (
     value="add-item"
     className="group flex items-center justify-between my-2 data-[selected=true]:bg-input/50 dark:data-[selected=true]:bg-input/20 rounded-md border border-transparent p-2 font-medium"
   >
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-2 items-center max-w-full">
       <Plus strokeWidth={1.5} className="size-5" />
-      <span className="text-muted-foreground">Add {query}</span>
+      <span className="text-muted-foreground truncate">Add {query}</span>
     </div>
   </CommandItem>
-);
-
-const ShortcutDisplay = () => (
-  <div className="absolute hidden lg:flex items-center gap-1 right-2 top-1/2 -translate-y-1/2">
-    {KEYBOARD_SHORTCUTS.map(({ key, display }) => (
-      <CommandShortcut key={key} className="rounded-full">
-        {display}
-      </CommandShortcut>
-    ))}
-  </div>
 );
 
 export const BookmarkCommand = () => {
@@ -57,18 +42,7 @@ export const BookmarkCommand = () => {
         loop
         className="space-y-5"
       >
-        <div className="w-full h-10 relative">
-          <Plus
-            strokeWidth={1}
-            className="absolute top-1/2 -translate-y-1/2 left-2 pointer-events-none"
-          />
-          <CreateBookmarkInput
-            value={value}
-            query={query}
-            setQuery={setQuery}
-          />
-          <ShortcutDisplay />
-        </div>
+        <CreateBookmarkInput value={value} query={query} setQuery={setQuery} />
 
         <Command.List>
           <Command.Group>

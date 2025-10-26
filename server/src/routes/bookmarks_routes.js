@@ -181,11 +181,23 @@ router.get(
   async (req, res) => {
     try {
       const { url } = req.query;
-      const response = await fetch(url); // fetch nativo en Node 18+
+
+      const response = await fetch(url, {
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        },
+      });
+
       const html = await response.text();
       const $ = cheerio.load(html);
-      const title = $("title").text() || new URL(url).hostname;
 
+      const title = (
+        $('meta[property="og:title"]').attr("content") ||
+        $('meta[name="twitter:title"]').attr("content") ||
+        $("title").text() ||
+        new URL(url).hostname
+      ).slice(0, 50);
       res.json({ title });
     } catch (err) {
       res.status(500).json({ error: "Failed to fetch title" });
