@@ -37,10 +37,9 @@ export const FolderSwitcherTrigger = forwardRef<
   return (
     <Button
       ref={ref}
-      variant="ghost"
-      size={"lg"}
+      variant="outline"
       role="combobox"
-      className="w-fit px-2 data-[state=open]:bg-accent dark:data-[state=open]:bg-accent/50"
+      className="w-fit p-1.5 data-[state=open]:bg-accent dark:data-[state=open]:bg-accent/50 rounded-[10px] transition-none"
       {...props}
     >
       {!activeFolder ? (
@@ -53,7 +52,7 @@ export const FolderSwitcherTrigger = forwardRef<
       ) : (
         <>
           <img
-            className="size-7 rounded-xl"
+            className="size-full rounded"
             src={`https://avatar.vercel.sh/${activeFolder?._id}`}
             alt="folder avatar"
           />

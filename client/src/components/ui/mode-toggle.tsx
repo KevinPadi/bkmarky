@@ -3,7 +3,11 @@ import { easeOut, motion as m } from "motion/react";
 import { useTheme } from "./theme-provider";
 import { cn } from "@/lib/utils";
 
-export function ModeToggle() {
+type Props = {
+  variant?: "outline" | "ghost";
+};
+
+export function ModeToggle({ variant = "outline" }: Props) {
   const { setTheme, theme } = useTheme();
 
   const raysVariants = {
@@ -45,10 +49,10 @@ export function ModeToggle() {
     "M70 49.5C70 60.8218 60.8218 70 49.5 70C38.1782 70 29 60.8218 29 49.5C29 38.1782 38.1782 29 49.5 29C39 45 49.5 59.5 70 49.5Z";
   return (
     <Button
-      variant="outline"
+      variant={variant}
       onClick={() => (theme === "dark" ? setTheme("light") : setTheme("dark"))}
-      className="size-8"
-      size={"sm"}
+      className="transition-none size-8 rounded-full"
+      size={"icon"}
     >
       <m.svg
         strokeLinecap="round"
@@ -57,14 +61,14 @@ export function ModeToggle() {
         xmlns="http://www.w3.org/2000/svg"
         className={cn(
           "stroke-accent-foreground",
-          theme === "light" ? "stroke-8" : "stroke-[5]"
+          theme === "light" ? "stroke-10" : "stroke-[4]"
         )}
       >
         <m.g
           variants={raysVariants}
           initial="hidden"
           animate={theme === "light" ? "visible" : "hidden"}
-          className="stroke-8 stroke-accent-foreground"
+          className="stroke-10 stroke-accent-foreground"
           style={{ strokeLinecap: "round" }}
         >
           <m.path
