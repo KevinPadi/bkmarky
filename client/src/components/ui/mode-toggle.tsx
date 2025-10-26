@@ -51,8 +51,8 @@ export function ModeToggle({ variant = "outline" }: Props) {
     <Button
       variant={variant}
       onClick={() => (theme === "dark" ? setTheme("light") : setTheme("dark"))}
-      className="size-8"
-      size={"sm"}
+      className="transition-none size-8 rounded-full"
+      size={"icon"}
     >
       <m.svg
         strokeLinecap="round"
@@ -61,14 +61,14 @@ export function ModeToggle({ variant = "outline" }: Props) {
         xmlns="http://www.w3.org/2000/svg"
         className={cn(
           "stroke-accent-foreground",
-          theme === "light" ? "stroke-8" : "stroke-[5]"
+          theme === "light" ? "stroke-10" : "stroke-[4]"
         )}
       >
         <m.g
           variants={raysVariants}
           initial="hidden"
           animate={theme === "light" ? "visible" : "hidden"}
-          className="stroke-8 stroke-accent-foreground"
+          className="stroke-10 stroke-accent-foreground"
           style={{ strokeLinecap: "round" }}
         >
           <m.path

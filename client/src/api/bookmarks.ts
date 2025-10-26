@@ -12,15 +12,34 @@ export const addBookmark = async ({
   domain,
   favicon,
 }: Omit<Bookmark, "_id" | "createdAt">) => {
+  const tempId = `temp-${Date.now()}`;
+  const optimisticBookmark: Bookmark = {
+    _id: tempId,
+    title,
+    url,
+    folderId,
+    domain,
+    favicon,
+    createdAt: new Date().toISOString(),
+  };
+
+  const { addBookmark, removeBookmark, updateBookmark } =
+    useFolderStore.getState();
+
+  addBookmark(optimisticBookmark);
+
   try {
     const { data } = await axios.post(
       `${BACKEND_URL}/api/bookmarks`,
       { title, url, folderId, domain, favicon },
       { withCredentials: true }
     );
-    useFolderStore.getState().addBookmark(data);
+
+    updateBookmark(tempId, data);
     return data;
   } catch (error: unknown) {
+    removeBookmark(tempId);
+
     let errMsg = "Error adding bookmark";
     if (isAxiosError(error)) {
       errMsg = error.response?.data?.error || error.message || errMsg;
@@ -41,17 +60,29 @@ export const updateBookmark = async ({
   bookmarkId: string;
   updates: Partial<Bookmark>;
 }) => {
+  const store = useFolderStore.getState();
+  const prev = store.bookmarks.find((b) => b._id === bookmarkId);
+
+  if (!prev) return;
+
+  // Optimistic update
+  store.updateBookmarkTitle({ ...prev, ...updates });
+
   try {
     const { data } = await axios.patch(
       `${BACKEND_URL}/api/bookmarks/${bookmarkId}`,
       updates,
       { withCredentials: true }
     );
-    useFolderStore.getState().removeBookmark(data._id);
-    useFolderStore.getState().updateBookmarkTitle(data);
+
+    // sync con backend
+    store.updateBookmarkTitle(data);
     return data;
   } catch (error: unknown) {
-    let errMsg = "Error adding bookmark";
+    // rollback
+    store.updateBookmarkTitle(prev);
+
+    let errMsg = "Error updating bookmark";
     if (isAxiosError(error)) {
       errMsg = error.response?.data?.error || error.message || errMsg;
     } else if (error instanceof Error) {
@@ -64,7 +95,6 @@ export const updateBookmark = async ({
   }
 };
 
-// ...existing code...
 export const moveBookmarkToFolder = async ({
   bookmarkId,
   newFolderId,
@@ -143,5 +173,24 @@ export const deleteBookmark = async (bookmarkId: string) => {
     }
     toast.error(errMsg);
     return false;
+  }
+};
+
+export const fetchPageTitle = async (url: string): Promise<string> => {
+  try {
+    // const res = await fetch(
+    //   `${BACKEND_URL}/api/bookmarks/fetch-title?url=${encodeURIComponent(url)}`
+    // );
+    // const { title } = await res.json();
+    // return title;
+    const { data } = await axios.get(
+      `${BACKEND_URL}/api/bookmarks/fetch-title?url=${encodeURIComponent(url)}`,
+      {
+        withCredentials: true,
+      }
+    );
+    return data.title;
+  } catch {
+    return "";
   }
 };
