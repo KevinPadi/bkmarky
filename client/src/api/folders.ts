@@ -1,4 +1,4 @@
-import { useFolderStore } from "@/stores/global-state";
+import { useFolderStore, type Folder } from "@/stores/global-state";
 import axios, { isAxiosError } from "axios";
 import { toast } from "sonner";
 
@@ -55,6 +55,48 @@ export const deleteFolder = async (folderId: string) => {
 
     if (isAxiosError(error)) {
       errMsg = error.response?.data?.message || error.message || errMsg;
+    } else if (error instanceof Error) {
+      errMsg = error.message || errMsg;
+    } else if (typeof error === "string") {
+      errMsg = error;
+    }
+
+    toast.error(errMsg);
+  }
+};
+
+export const updateFolderName = async ({
+  folderId,
+  updates,
+}: {
+  folderId: string;
+  updates: Partial<Folder>;
+}) => {
+  const store = useFolderStore.getState();
+  const prev = store.folders.find((f) => f._id === folderId);
+
+  if (!prev) return;
+
+  // Optimistic update
+  store.updateFolderName({ ...prev, ...updates });
+  store.setActiveFolder({ ...store.activeFolder!, ...updates });
+  try {
+    const { data } = await axios.patch(
+      `${BACKEND_URL}/api/folders/${folderId}`,
+      updates,
+      { withCredentials: true }
+    );
+
+    // sync con backend
+    store.updateFolderName(data);
+    return data;
+  } catch (error: unknown) {
+    // rollback
+    store.updateFolderName(prev);
+
+    let errMsg = "Error updating bookmark";
+    if (isAxiosError(error)) {
+      errMsg = error.response?.data?.error || error.message || errMsg;
     } else if (error instanceof Error) {
       errMsg = error.message || errMsg;
     } else if (typeof error === "string") {
