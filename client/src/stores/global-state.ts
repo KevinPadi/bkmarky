@@ -27,6 +27,7 @@ interface FolderState {
   updateFolder: (folder: Folder) => void;
   removeFolder: (_id: string) => void;
   addFolder: (folder: Folder) => void;
+  updateFolderName: (folder: Folder) => void;
   bookmarks: Bookmark[];
   setBookmarks: (bookmarks: Bookmark[]) => void;
   addBookmark: (bookmark: Bookmark) => void;
@@ -51,6 +52,12 @@ export const useFolderStore = create<FolderState>((set) => ({
   addFolder: (folder) =>
     set((state) => ({
       folders: [folder, ...state.folders],
+    })),
+  updateFolderName: (folder) =>
+    set((state) => ({
+      folders: state.folders.map((f) =>
+        f._id === folder._id ? { ...f, name: folder.name } : f
+      ),
     })),
 
   bookmarks: [],

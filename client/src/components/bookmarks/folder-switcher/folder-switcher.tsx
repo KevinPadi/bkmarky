@@ -23,21 +23,33 @@ import FolderSwitcherError from "./folder-switcher-error";
 import { AddFolderDialog } from "./add-folder-dialog";
 import DeleteFolderButton from "./delete-folder-button";
 import { PlusIcon, type PlusIconHandle } from "@/components/ui/plus";
+import EditFolderDialog from "./edit-folder-dialog";
+import {
+  SquarePenIcon,
+  type SquarePenIconHandle,
+} from "@/components/ui/square-pen-icon";
 
 const FolderSwitcher = () => {
   const [open, setOpen] = useState(false);
   const [showAddFolderDialog, setShowAddFolderDialog] = useState(false);
+  const [showEditFolderDialog, setShowEditFolderDialog] = useState(false);
   const activeFolder = useFolderStore((s) => s.activeFolder);
   const setActiveFolder = useFolderStore((s) => s.setActiveFolder);
   const { folders, isLoading, isError } = useFolders();
 
   const PlusIconRef = useRef<PlusIconHandle>(null);
+  const EditIconRef = useRef<SquarePenIconHandle>(null);
 
   if (isLoading) return <FolderSwitcherSkeleton />;
   if (isError) return <FolderSwitcherError />;
 
   const openFolderModal = () => {
     setShowAddFolderDialog(!showAddFolderDialog);
+    setOpen(false);
+  };
+
+  const openEditFolderModal = () => {
+    setShowEditFolderDialog(!showEditFolderDialog);
     setOpen(false);
   };
 
@@ -65,7 +77,6 @@ const FolderSwitcher = () => {
                         setOpen(false);
                       }}
                     >
-                      {" "}
                       <img
                         className="size-6 rounded"
                         src={`https://avatar.vercel.sh/${folder._id}`}
@@ -93,15 +104,26 @@ const FolderSwitcher = () => {
                   ))}
                 {folders.length > 0 && <CommandSeparator className="my-1" />}
                 <CommandItem
-                  className="text-accent-foreground/60 data-[selected=true]:text-accent-foreground/60"
+                  className="text-muted-foreground data-[selected=true]:text-muted-foreground group"
                   onSelect={() => openFolderModal()}
                   onMouseEnter={() => PlusIconRef.current?.startAnimation()}
                   onMouseLeave={() => PlusIconRef.current?.stopAnimation()}
                 >
-                  <div className="flex items-center justify-center size-6 rounded-full bg-muted">
+                  <div className="flex items-center justify-center size-6 rounded bg-muted group-data-[selected=true]:bg-neutral-50 dark:group-data-[selected=true]:bg-neutral-900">
                     <PlusIcon ref={PlusIconRef} />
                   </div>
                   Add new folder
+                </CommandItem>
+                <CommandItem
+                  className="text-muted-foreground data-[selected=true]:text-muted-foreground group"
+                  onSelect={() => openEditFolderModal()}
+                  onMouseEnter={() => EditIconRef.current?.startAnimation()}
+                  onMouseLeave={() => EditIconRef.current?.stopAnimation()}
+                >
+                  <div className="flex items-center justify-center size-6 rounded bg-muted group-data-[selected=true]:bg-neutral-50 dark:group-data-[selected=true]:bg-neutral-900">
+                    <SquarePenIcon ref={EditIconRef} />
+                  </div>
+                  Edit folder name
                 </CommandItem>
                 <DeleteFolderButton />
               </CommandGroup>
@@ -113,6 +135,10 @@ const FolderSwitcher = () => {
       <AddFolderDialog
         open={showAddFolderDialog}
         onOpenChange={setShowAddFolderDialog}
+      />
+      <EditFolderDialog
+        open={showEditFolderDialog}
+        onOpenChange={setShowEditFolderDialog}
       />
     </>
   );

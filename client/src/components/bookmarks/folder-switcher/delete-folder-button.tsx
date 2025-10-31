@@ -24,12 +24,12 @@ const DeleteFolderButton = () => {
     <CommandItem
       disabled={!activeFolder}
       value="delete-folder"
-      className="px-2 py-1.5 justify-start font-normal text-sm text-muted-foreground hover:text-accent-foreground/60"
+      className="px-2 py-1.5 justify-start font-normal text-sm text-muted-foreground dark:hover:text-muted-foreground data-[selected=true]:text-muted-foreground dark:data-[selected=true]:text-muted-foreground group"
       onSelect={handleDeleteFolder}
       onMouseEnter={() => DeleteIconRef.current?.startAnimation()}
       onMouseLeave={() => DeleteIconRef.current?.stopAnimation()}
     >
-      <div className="size-6 bg-muted rounded-full flex items-center justify-center">
+      <div className="size-6 bg-muted rounded flex items-center justify-center dark:group-data-[selected=true]:bg-neutral-900 group-data-[selected=true]:bg-neutral-50">
         <DeleteIcon ref={DeleteIconRef} />
       </div>
       <TextMorph>{text}</TextMorph>
